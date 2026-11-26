@@ -153,7 +153,7 @@
       <button onclick="switchScreen('productos')" id="nav-productos" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
         <i data-lucide="box" class="w-4 h-4 text-emerald-400"></i>
         <span>Catálogo de Productos</span>
-        <span class="ml-auto text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">Iterator</span>
+        
       </button>
 
       <button onclick="switchScreen('inventario')" id="nav-inventario" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
@@ -164,13 +164,13 @@
       <button onclick="switchScreen('pedidos')" id="nav-pedidos" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
         <i data-lucide="shopping-cart" class="w-4 h-4 text-indigo-400"></i>
         <span>Gestión de Pedidos</span>
-        <span class="ml-auto text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">Command</span>
+        
       </button>
 
       <button onclick="switchScreen('pagos')" id="nav-pagos" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
         <i data-lucide="credit-card" class="w-4 h-4 text-teal-400"></i>
         <span>Pasarelas de Pago</span>
-        <span class="ml-auto text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">Adapter</span>
+        
       </button>
 
       <div class="text-[10px] uppercase font-bold text-slate-400 px-3 pt-3 pb-1 tracking-wider">Estrategia & Control</div>
@@ -178,19 +178,19 @@
       <button onclick="switchScreen('precios')" id="nav-precios" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
         <i data-lucide="tag" class="w-4 h-4 text-rose-400"></i>
         <span>Estrategias de Precios</span>
-        <span class="ml-auto text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">Strategy</span>
+        
       </button>
 
       <button onclick="switchScreen('reportes')" id="nav-reportes" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
         <i data-lucide="bar-chart-3" class="w-4 h-4 text-violet-400"></i>
         <span>Reportes Financieros</span>
-        <span class="ml-auto text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">Proxy</span>
+        
       </button>
 
       <button onclick="switchScreen('historial')" id="nav-historial" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
         <i data-lucide="history" class="w-4 h-4 text-cyan-400"></i>
         <span>Historial & Deshacer</span>
-        <span class="ml-auto text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">Memento</span>
+        
       </button>
 
       <div class="text-[10px] uppercase font-bold text-slate-400 px-3 pt-3 pb-1 tracking-wider">Sistema</div>
@@ -385,19 +385,18 @@
               </div>
             </div>
 
-            <!-- Patrones Implementados Card -->
+            <!-- Estado Operativo del Sistema -->
             <div class="bg-gradient-to-br from-slate-900 to-blue-950 text-white p-4 rounded-xl shadow-md border border-slate-800">
               <div class="flex items-center gap-2 mb-2">
-                <i data-lucide="shield" class="w-4 h-4 text-blue-400"></i>
-                <h4 class="text-xs font-bold uppercase tracking-wider text-blue-300">Patrones en Ejecución</h4>
+                <i data-lucide="activity" class="w-4 h-4 text-emerald-400"></i>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-emerald-300">Estado Operativo del Sistema</h4>
               </div>
-              <ul class="text-[11px] space-y-1.5 text-slate-300">
-                <li>• <strong>Adapter:</strong> PayPal, Yape, Plin activos.</li>
-                <li>• <strong>Proxy:</strong> Reportes filtrados por RBAC.</li>
-                <li>• <strong>Observer:</strong> Suscripción activa a stock crítico.</li>
-                <li>• <strong>Command & Memento:</strong> Historial y Undo listos.</li>
-                <li>• <strong>Strategy:</strong> Pricing dinámico configurable.</li>
-                <li>• <strong>Iterator:</strong> Catálogo paginado desacoplado.</li>
+              <ul class="text-[11px] space-y-2 text-slate-300">
+                <li class="flex items-center justify-between"><span>Pasarelas Digitales:</span><span class="text-emerald-400 font-bold flex items-center gap-1"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> 100% Conectadas</span></li>
+                <li class="flex items-center justify-between"><span>Control de Accesos:</span><span class="text-blue-300 font-bold">Activo & Seguro</span></li>
+                <li class="flex items-center justify-between"><span>Monitoreo de Stock:</span><span class="text-amber-300 font-bold">Tiempo Real</span></li>
+                <li class="flex items-center justify-between"><span>Base de Datos:</span><span class="text-emerald-400 font-bold">Transaccional</span></li>
+                <li class="flex items-center justify-between"><span>Auditoría de Pedidos:</span><span class="text-purple-300 font-bold">Sincronizada</span></li>
               </ul>
             </div>
           </div>
@@ -453,13 +452,12 @@
           </button>
         </div>
 
-        <!-- Banner Explicativo Iterator -->
-        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-900 flex items-center justify-between">
-          <div class="flex items-center gap-2">
-            <i data-lucide="info" class="w-4 h-4 text-blue-600 shrink-0"></i>
-            <span><strong>Patrón Iterator en Acción:</strong> El catálogo se recorre mediante un iterador desacoplado de la estructura interna, garantizando paginación ágil y filtros en tiempo real sin recargar datos pesados.</span>
+        <div class="flex items-center justify-between px-1">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">Catálogo de Productos y Existencias</h2>
+            <p class="text-xs text-slate-500">Gestión de inventario para ventas, cotizaciones y pedidos comerciales</p>
           </div>
-          <span class="text-[11px] font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded" id="iterator-status-badge">Página 1 de 2</span>
+          <span class="text-xs font-bold text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1 rounded-full shadow-sm" id="iterator-status-badge">Página 1 de 2</span>
         </div>
 
         <!-- Tabla Productos -->
@@ -501,11 +499,11 @@
               <i data-lucide="bell-ring" class="w-5 h-5"></i>
               Control de Inventario y Alertas de Stock
             </h2>
-            <p class="text-xs text-amber-100 mt-0.5">Define el stock mínimo por producto. Cuando las existencias caigan bajo ese número, se enviará una alerta automática reactiva a Gerente y Compras.</p>
+            <p class="text-xs text-amber-100 mt-0.5">Supervisión en tiempo real de almacén y umbrales mínimos de abastecimiento para compras y reposición.</p>
           </div>
           <button onclick="triggerSimulatedSale()" class="bg-white text-amber-800 text-xs font-bold px-3.5 py-2 rounded-lg hover:bg-amber-50 shadow transition flex items-center gap-1.5">
             <i data-lucide="zap" class="w-4 h-4 text-amber-600"></i>
-            <span>Simular Venta y Probar Alerta</span>
+            <span>Simular Salida de Almacén</span>
           </button>
         </div>
 
@@ -521,7 +519,7 @@
                 <th class="p-3">Stock Físico Actual</th>
                 <th class="p-3">Stock Mínimo Configurable</th>
                 <th class="p-3">Estado de Alerta</th>
-                <th class="p-3">Observadores Suscritos</th>
+                <th class="p-3">Destinatarios de Alerta</th>
                 <th class="p-3 text-right">Guardar Umbral</th>
               </tr>
             </thead>
@@ -575,13 +573,16 @@
         <div class="bg-slate-900 text-white p-5 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
           <div>
             <div class="flex items-center gap-2 text-teal-400 font-bold text-xs uppercase tracking-wider mb-1">
-              <i data-lucide="cpu" class="w-4 h-4"></i>
-              <span>Patrón Adapter en Pasarelas de Pago</span>
+              <i data-lucide="credit-card" class="w-4 h-4"></i>
+              <span>Cobros y Conciliación Electrónica</span>
             </div>
-            <h2 class="text-lg font-bold">Integración Unificada de Pagos Digitales</h2>
-            <p class="text-xs text-slate-300 mt-1 max-w-xl">El sistema interactúa con una interfaz polimórfica <code class="text-teal-300 bg-slate-800 px-1 py-0.5 rounded">IPaymentGateway</code>. Los adaptadores específicos convierten las llamadas heterogéneas de PayPal, Yape y Plin sin modificar el flujo de ventas.</p>
+            <h2 class="text-lg font-bold">Gestión de Pasarelas y Medios de Pago</h2>
+            <p class="text-xs text-slate-300 mt-1 max-w-xl">Administración de canales de cobro digital para ventas presenciales y comercio electrónico con liquidación automática en soles y dólares.</p>
           </div>
-          <span class="text-xs bg-teal-500/20 text-teal-300 border border-teal-500/30 px-3 py-1.5 rounded-lg font-mono">Status: Pasarelas Operativas</span>
+          <span class="text-xs bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-3 py-1.5 rounded-lg font-medium flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Canales Operativos</span>
+          </span>
         </div>
 
         <!-- Métodos de Pago Disponibles (Informativos y Sincronizados con el Selector) -->
@@ -659,7 +660,7 @@
 
         <!-- Simulador de Checkout de Pago -->
         <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
-          <h3 class="text-sm font-bold text-slate-900 mb-3">Simulador Interactivo de Cobro mediante Adapter</h3>
+          <h3 class="text-sm font-bold text-slate-900 mb-3">Simulador de Transacciones Comerciales</h3>
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
             <div>
               <label class="block text-xs font-medium text-slate-700 mb-1">Monto de Prueba (S/)</label>
@@ -676,7 +677,7 @@
             <div class="pt-5">
               <button onclick="processSimulatedPayment()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg text-xs transition flex items-center justify-center gap-2">
                 <i data-lucide="check-circle" class="w-4 h-4"></i>
-                <span>Procesar Pago con Adapter</span>
+                <span>Procesar Cobro de Prueba</span>
               </button>
             </div>
           </div>
@@ -692,11 +693,11 @@
         <div class="bg-gradient-to-r from-rose-900 via-pink-900 to-rose-950 text-white p-5 rounded-xl shadow-md flex justify-between items-center">
           <div>
             <div class="flex items-center gap-2 text-rose-300 text-xs font-bold uppercase tracking-wider mb-1">
-              <i data-lucide="sparkles" class="w-4 h-4"></i>
-              <span>Patrón Strategy en Políticas de Precios</span>
+              <i data-lucide="tag" class="w-4 h-4"></i>
+              <span>Políticas Comerciales de Precios</span>
             </div>
-            <h2 class="text-lg font-bold">Motor Dinámico de Estrategias de Tarificación</h2>
-            <p class="text-xs text-rose-200 mt-0.5">El administrador puede conmutar la política comercial activa del negocio sin modificar el código fuente de cálculo.</p>
+            <h2 class="text-lg font-bold">Configuración de Tarifas y Descuentos</h2>
+            <p class="text-xs text-rose-200 mt-0.5">Selección de la política comercial aplicada automáticamente al catálogo de productos y pedidos.</p>
           </div>
           <span class="text-xs bg-rose-500/30 text-rose-200 border border-rose-400/40 px-3 py-1.5 rounded-lg font-bold">
             Activa: <span id="strategy-current-label">Estándar</span>
@@ -775,9 +776,9 @@
           <div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4">
             <i data-lucide="shield-alert" class="w-8 h-8"></i>
           </div>
-          <h2 class="text-lg font-bold text-rose-900">Acceso Bloqueado por FinancialReportProxy</h2>
+          <h2 class="text-lg font-bold text-rose-900">Acceso Restringido: Módulo Confidencial</h2>
           <p class="text-xs text-rose-700 max-w-md mx-auto mt-2 leading-relaxed">
-            Tu rol actual es <strong id="denied-current-role" class="underline">Vendedor</strong>. En cumplimiento del <strong>RF3 y RF4</strong> de TechSolutions S.A., únicamente los colaboradores con rol de <strong>Gerente General</strong> o <strong>Contador</strong> están autorizados a visualizar reportes financieros confidenciales.
+            Tu perfil actual no cuenta con autorización para visualizar balances contables. Para consultar esta información, inicia sesión como <strong>Gerente General</strong> o <strong>Contador</strong>.
           </p>
           <div class="mt-5 flex justify-center gap-3">
             <button onclick="setSimulatedRole('Gerente')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
@@ -795,10 +796,10 @@
             <div>
               <div class="flex items-center gap-2">
                 <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
-                  <i data-lucide="check-circle-2" class="w-3 h-3 mr-1"></i> Autorizado por Proxy
+                  <i data-lucide="check-circle-2" class="w-3 h-3 mr-1"></i> Acceso Autorizado
                 </span>
                 <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800" id="proxy-cache-badge">
-                  Caché Proxy: ACTIVA (300s TTL)
+                  Caché del Sistema: ACTIVA (300s TTL)
                 </span>
               </div>
               <h2 class="text-base font-bold text-slate-900 mt-1">Balance Financiero y Reporte de Ventas PYME</h2>
@@ -806,7 +807,7 @@
             <div class="flex gap-2">
               <button onclick="refreshReportCache()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition">
                 <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
-                <span>Refrescar Caché Proxy</span>
+                <span>Actualizar Datos Financieros</span>
               </button>
               <button onclick="exportFinancialReport()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition shadow-sm">
                 <i data-lucide="download" class="w-3.5 h-3.5"></i>
@@ -983,25 +984,25 @@
           <div>
             <div class="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1">
               <i data-lucide="history" class="w-4 h-4"></i>
-              <span>Patrón Memento & Command en Operaciones</span>
+              <span>Auditoría de Operaciones y Control de Estados</span>
             </div>
             <h2 class="text-lg font-bold">Historial de Transacciones y Restauración de Estados</h2>
-            <p class="text-xs text-slate-300 mt-0.5">Permite auditar cada comando ejecutado y revertir modificaciones críticas o cancelaciones erróneas sin comprometer la base de datos.</p>
+            <p class="text-xs text-slate-300 mt-0.5">Registro cronológico de movimientos comerciales con trazabilidad de usuarios y capacidad de reversión inmediata.</p>
           </div>
-          <span class="text-xs font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-3 py-1.5 rounded-lg">Caretaker Activo</span>
+          <span class="text-xs bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-3 py-1.5 rounded-lg font-medium">Auditoría en Tiempo Real</span>
         </div>
 
         <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
           <div class="p-4 border-b border-slate-200 flex justify-between items-center">
             <h3 class="text-sm font-bold text-slate-900">Registro Cronológico de Comandos Ejecutados</h3>
-            <span class="text-xs text-slate-500">Pila de Mementos Disponibles</span>
+            <span class="text-xs text-slate-500">Registros Reversibles Disponibles</span>
           </div>
           <table class="w-full text-left text-xs">
             <thead class="bg-slate-50 text-slate-600 uppercase font-semibold text-[10px]">
               <tr>
                 <th class="p-3">ID Log</th>
                 <th class="p-3">Fecha y Hora</th>
-                <th class="p-3">Comando Ejecutado</th>
+                <th class="p-3">Operación Realizada</th>
                 <th class="p-3">Pedido Afectado</th>
                 <th class="p-3">Usuario Responsable</th>
                 <th class="p-3">Estado Previo Registrado</th>
@@ -1268,7 +1269,7 @@
             <option value="Autorizado Total">Autorizado Total (Acceso a balances y exportación)</option>
             <option value="Configuración Técnica">Configuración Técnica (Solo logs de infraestructura)</option>
           </select>
-          <p class="text-[11px] text-slate-500 mt-1">Control de acceso gobernado mediante el patrón estructural Proxy.</p>
+          <p class="text-[11px] text-slate-500 mt-1">Control de acceso gobernado mediante los perfiles de seguridad corporativos.</p>
         </div>
         <div class="pt-3 border-t border-slate-200 flex justify-end gap-2">
           <button type="button" onclick="closeNewUserModal()" class="px-3 py-2 text-slate-600 hover:bg-slate-200 rounded-lg text-xs font-semibold">Cancelar</button>
@@ -1329,7 +1330,7 @@
 
         <div id="payment-processing-animation" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-lg text-center text-blue-700">
           <i data-lucide="loader" class="w-5 h-5 animate-spin mx-auto mb-1"></i>
-          <span>Invocando método <code class="font-mono font-bold">adapter.processPayment()</code>...</span>
+          <span>Conectando con la pasarela de pago segura...</span>
         </div>
       </div>
       <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-2">
@@ -1540,11 +1541,11 @@
 
     function refreshReportCache() {
       const badge = document.getElementById('proxy-cache-badge');
-      badge.innerText = "Recalculando desde RealFinancialReportService...";
+      badge.innerText = "Consultando base de datos centralizada...";
       badge.classList.remove('bg-blue-100', 'text-blue-800');
       badge.classList.add('bg-amber-100', 'text-amber-800');
       setTimeout(() => {
-        badge.innerText = "Caché Proxy: ACTUALIZADA (300s TTL)";
+        badge.innerText = "Caché del Sistema: ACTUALIZADA (300s TTL)";
         badge.classList.remove('bg-amber-100', 'text-amber-800');
         badge.classList.add('bg-blue-100', 'text-blue-800');
       }, 700);
@@ -1854,7 +1855,7 @@
       const p = AppState.products[0];
       if (p.stock > 0) {
         p.stock -= 1;
-        alert(`Venta simulada completada. Stock de ${p.name} redujo a ${p.stock}. Notificación Observer disparada a Gerente y Compras.`);
+        alert(`Salida de almacén registrada. El stock de ${p.name} redujo a ${p.stock} unidades. Se emitió una alerta automática de reposición a Gerencia y Compras.`);
         renderAll();
       }
     }
@@ -1987,7 +1988,7 @@
         mementoIndex: mementoIndex
       });
 
-      alert(`Comando CancelOrderCommand ejecutado sobre ${orderId}. Memento guardado con éxito. Ahora puedes restaurarlo desde la pantalla 'Historial & Deshacer'.`);
+      alert(`El pedido ${orderId} fue cancelado exitosamente. La acción ha sido registrada en el historial y puede ser restaurada si se requiere.`);
       renderAll();
     }
 
@@ -2011,7 +2012,7 @@
           mementoIndex: -1
         });
 
-        alert(`¡Patrón Memento en Acción! El pedido ${memento.id} fue restaurado exitosamente a su estado anterior (${memento.status}).`);
+        alert(`¡Operación Revertida con Éxito! El pedido ${memento.id} fue restaurado a su estado anterior (${memento.status}).`);
         renderAll();
       }
     }
@@ -2027,7 +2028,7 @@
         tr.innerHTML = `
           <td class="p-3 font-mono font-bold text-slate-600">${c.id}</td>
           <td class="p-3 text-slate-500">${c.timestamp}</td>
-          <td class="p-3 font-bold text-indigo-700">${c.command}</td>
+          <td class="p-3 font-bold text-indigo-700">${c.command.replace("Command", "").replace("CreateOrder", "Crear Pedido").replace("ProcessPayment", "Procesar Pago").replace("CancelOrder", "Cancelar Pedido").replace("RestoreMemento", "Restaurar Pedido")}</td>
           <td class="p-3 font-mono font-semibold text-blue-700">${c.target}</td>
           <td class="p-3 text-slate-700">${c.user}</td>
           <td class="p-3"><span class="px-2 py-0.5 bg-slate-100 rounded text-[10px] font-bold">${c.previousState}</span></td>
@@ -2127,7 +2128,7 @@
       });
 
       closeModalCreateOrder();
-      alert(`Pedido ${newId} creado exitosamente mediante CreateOrderCommand.`);
+      alert(`Pedido ${newId} registrado exitosamente en el sistema.`);
       renderAll();
     }
 
