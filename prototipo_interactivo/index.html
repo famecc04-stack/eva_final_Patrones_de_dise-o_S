@@ -270,13 +270,13 @@
           </div>
         </div>
 
-        <!-- Current User Role Chip -->
-        <div class="flex items-center gap-2 pl-3 border-l border-slate-200">
+        <!-- Current User Role Chip (Interactivo para cambiar usuario) -->
+        <div onclick="openLoginModal()" title="Haga clic para cambiar de usuario" class="flex items-center gap-2 pl-3 border-l border-slate-200 cursor-pointer hover:bg-slate-50 p-1.5 rounded-lg transition">
           <div class="text-right">
             <span class="block text-xs font-bold text-slate-800" id="topbar-user-name">Estefanía Orellana</span>
             <span class="block text-[10px] text-slate-500" id="topbar-user-role">Gerente General</span>
           </div>
-          <div id="topbar-user-avatar" class="w-8 h-8 rounded-lg bg-blue-100 text-blue-800 font-bold flex items-center justify-center text-xs">
+          <div id="topbar-user-avatar" class="w-8 h-8 rounded-lg bg-blue-100 text-blue-800 font-bold flex items-center justify-center text-xs shadow-sm">
             EO
           </div>
         </div>
@@ -366,7 +366,7 @@
             <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
               <h3 class="text-sm font-bold text-slate-900 mb-3">Accesos Directos</h3>
               <div class="grid grid-cols-2 gap-2 text-xs">
-                <button onclick="switchScreen('pedidos')" class="p-3 bg-blue-50 text-blue-700 font-semibold rounded-lg hover:bg-blue-100 flex flex-col items-center gap-1">
+                <button onclick="switchScreen('pedidos'); openModalCreateOrder();" class="p-3 bg-blue-50 text-blue-700 font-semibold rounded-lg hover:bg-blue-100 flex flex-col items-center gap-1 transition">
                   <i data-lucide="plus-circle" class="w-5 h-5 text-blue-600"></i>
                   <span>Nuevo Pedido</span>
                 </button>
@@ -376,7 +376,7 @@
                 </button>
                 <button onclick="switchScreen('pagos')" class="p-3 bg-indigo-50 text-indigo-700 font-semibold rounded-lg hover:bg-indigo-100 flex flex-col items-center gap-1">
                   <i data-lucide="sliders" class="w-5 h-5 text-indigo-600"></i>
-                  <span>Pasarelas (Adapter)</span>
+                  <span>Pasarelas de Pago</span>
                 </button>
                 <button onclick="switchScreen('reportes')" class="p-3 bg-purple-50 text-purple-700 font-semibold rounded-lg hover:bg-purple-100 flex flex-col items-center gap-1">
                   <i data-lucide="shield-check" class="w-5 h-5 text-purple-600"></i>
@@ -802,7 +802,7 @@
                 <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
                 <span>Refrescar Caché Proxy</span>
               </button>
-              <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+              <button onclick="exportFinancialReport()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition shadow-sm">
                 <i data-lucide="download" class="w-3.5 h-3.5"></i>
                 <span>Exportar Excel / PDF</span>
               </button>
@@ -918,7 +918,7 @@
                 <td class="p-3"><span class="bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded text-[10px]">Gerente General</span></td>
                 <td class="p-3"><span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">Activo</span></td>
                 <td class="p-3 text-emerald-600 font-bold">Autorizado Total</td>
-                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold">Editar</td>
+                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold" onclick="openEditUserModal('Estefanía Orellana', 'estefania.orellana@techsolutions.pe', 'Gerente General', 'Activo', 'Autorizado Total')">Editar</td>
               </tr>
               <tr>
                 <td class="p-3 font-semibold text-slate-900 flex items-center gap-2">
@@ -929,7 +929,7 @@
                 <td class="p-3"><span class="bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded text-[10px]">Administrador TI</span></td>
                 <td class="p-3"><span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">Activo</span></td>
                 <td class="p-3 text-slate-500 font-bold">Configuración Técnica</td>
-                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold">Editar</td>
+                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold" onclick="openEditUserModal('Fabiola Cadillo', 'fabiola.cadillo@techsolutions.pe', 'Administrador TI', 'Activo', 'Configuración Técnica')">Editar</td>
               </tr>
               <tr>
                 <td class="p-3 font-semibold text-slate-900 flex items-center gap-2">
@@ -940,7 +940,7 @@
                 <td class="p-3"><span class="bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded text-[10px]">Contador</span></td>
                 <td class="p-3"><span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">Activo</span></td>
                 <td class="p-3 text-emerald-600 font-bold">Autorizado Total</td>
-                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold">Editar</td>
+                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold" onclick="openEditUserModal('Carlos Mendoza', 'contabilidad@techsolutions.pe', 'Contador', 'Activo', 'Autorizado Total')">Editar</td>
               </tr>
               <tr>
                 <td class="p-3 font-semibold text-slate-900 flex items-center gap-2">
@@ -951,7 +951,7 @@
                 <td class="p-3"><span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px]">Personal Compras</span></td>
                 <td class="p-3"><span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">Activo</span></td>
                 <td class="p-3 text-rose-600 font-bold">Restringido por Perfil</td>
-                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold">Editar</td>
+                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold" onclick="openEditUserModal('Luis Valdivia', 'compras@techsolutions.pe', 'Personal Compras', 'Activo', 'Restringido por Perfil')">Editar</td>
               </tr>
               <tr>
                 <td class="p-3 font-semibold text-slate-900 flex items-center gap-2">
@@ -962,7 +962,7 @@
                 <td class="p-3"><span class="bg-slate-100 text-slate-800 font-bold px-2 py-0.5 rounded text-[10px]">Vendedor / Caja</span></td>
                 <td class="p-3"><span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">Activo</span></td>
                 <td class="p-3 text-rose-600 font-bold">Restringido por Perfil</td>
-                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold">Editar</td>
+                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold" onclick="openEditUserModal('Ana Romero', 'ventas.caja@techsolutions.pe', 'Vendedor / Operador', 'Activo', 'Restringido por Perfil')">Editar</td>
               </tr>
             </tbody>
           </table>
@@ -1018,24 +1018,25 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
             <div>
               <label class="block font-semibold text-slate-700 mb-1">Razón Social</label>
-              <input type="text" value="TechSolutions S.A." class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+              <input type="text" id="cfg-razon-social" value="TechSolutions S.A." class="w-full px-3 py-2 border border-slate-300 rounded-lg font-medium focus:ring-2 focus:ring-blue-500">
             </div>
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">RUC</label>
-              <input type="text" value="20608976541" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+              <label class="block font-semibold text-slate-700 mb-1">RUC Institucional</label>
+              <input type="text" id="cfg-ruc" value="20608976541" class="w-full px-3 py-2 border border-slate-300 rounded-lg font-mono font-bold focus:ring-2 focus:ring-blue-500">
             </div>
             <div>
               <label class="block font-semibold text-slate-700 mb-1">Moneda del Sistema</label>
-              <input type="text" value="Soles Peruanos (PEN - S/)" readonly class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-slate-50 font-bold text-slate-700">
+              <input type="text" id="cfg-moneda" value="Soles Peruanos (PEN - S/)" readonly class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-slate-50 font-bold text-slate-700">
             </div>
             <div>
               <label class="block font-semibold text-slate-700 mb-1">Tasa de Impuesto General a las Ventas (IGV)</label>
-              <input type="text" value="18%" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+              <input type="text" id="cfg-igv" value="18%" class="w-full px-3 py-2 border border-slate-300 rounded-lg font-bold text-slate-800 focus:ring-2 focus:ring-blue-500">
             </div>
           </div>
           <div class="mt-5 flex justify-end">
-            <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-xs transition">
-              Guardar Cambios de Configuración
+            <button onclick="saveGeneralConfiguration()" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-xs transition shadow flex items-center gap-1.5">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>Guardar Cambios de Configuración</span>
             </button>
           </div>
         </div>
@@ -1103,6 +1104,115 @@
           <i data-lucide="check" class="w-4 h-4"></i>
           <span>Registrar Pedido</span>
         </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: AGREGAR PRODUCTO (ITERATOR & INVENTORY) -->
+  <div id="modal-add-product" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200 animate-fade-in">
+      <div class="bg-slate-900 p-4 text-white flex justify-between items-center">
+        <h3 class="text-sm font-bold flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-blue-400"></i>
+          <span>Agregar Nuevo Producto al Catálogo</span>
+        </h3>
+        <button onclick="closeModalAddProduct()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <form id="form-add-product" onsubmit="event.preventDefault(); submitAddProduct();" class="p-5 space-y-3.5 text-xs">
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Código SKU</label>
+            <input type="text" id="new-prod-sku" required placeholder="Ej. TECH-003" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-mono font-semibold focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Categoría</label>
+            <select id="new-prod-category" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-medium bg-white focus:ring-2 focus:ring-blue-500">
+              <option value="Tecnología">Tecnología & Cómputo</option>
+              <option value="Accesorios">Accesorios & Periféricos</option>
+              <option value="Audio">Audio & Multimedia</option>
+              <option value="Oficina">Mobiliario de Oficina</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Nombre o Descripción del Producto</label>
+          <input type="text" id="new-prod-name" required placeholder="Ej. Tablet Lenovo Tab M10 FHD" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500">
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Precio Base (S/)</label>
+            <input type="number" step="0.01" min="1" id="new-prod-price" required placeholder="750.00" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-bold text-blue-700 focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Stock Físico</label>
+            <input type="number" min="0" id="new-prod-stock" required placeholder="15" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-bold focus:ring-2 focus:ring-blue-500">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Stock Mínimo</label>
+            <input type="number" min="1" id="new-prod-min-stock" required placeholder="5" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-bold focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+        <div class="pt-3 border-t border-slate-200 flex justify-end gap-2">
+          <button type="button" onclick="closeModalAddProduct()" class="px-3 py-2 text-slate-600 hover:bg-slate-200 rounded-lg text-xs font-semibold">Cancelar</button>
+          <button type="submit" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow">
+            <i data-lucide="check" class="w-4 h-4"></i>
+            <span>Guardar en Catálogo</span>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: DETALLES DE PEDIDO -->
+  <div id="modal-order-details" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200 animate-fade-in">
+      <div class="bg-slate-900 p-4 text-white flex justify-between items-center">
+        <h3 class="text-sm font-bold flex items-center gap-2">
+          <i data-lucide="receipt" class="w-4 h-4 text-blue-400"></i>
+          <span>Detalles del Pedido <span id="detail-order-id" class="font-mono text-cyan-400"></span></span>
+        </h3>
+        <button onclick="closeModalOrderDetails()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="p-5 space-y-3.5 text-xs">
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-xl space-y-1">
+          <div class="flex justify-between text-slate-600">
+            <span>Cliente:</span>
+            <strong id="detail-order-customer" class="text-slate-800"></strong>
+          </div>
+          <div class="flex justify-between text-slate-600">
+            <span>Fecha y Hora:</span>
+            <span id="detail-order-date" class="font-medium text-slate-700"></span>
+          </div>
+          <div class="flex justify-between text-slate-600">
+            <span>Estado Actual:</span>
+            <span id="detail-order-status" class="font-bold"></span>
+          </div>
+          <div class="flex justify-between text-slate-600">
+            <span>Pasarela Utilizada:</span>
+            <span id="detail-order-gateway" class="font-bold text-slate-800"></span>
+          </div>
+        </div>
+        <div class="p-3 border border-slate-200 rounded-xl">
+          <p class="font-semibold text-slate-700 mb-1">Ítems del Pedido:</p>
+          <p id="detail-order-items" class="text-slate-800 font-medium"></p>
+        </div>
+        <div class="p-3 bg-blue-50/50 border border-blue-200 rounded-xl space-y-1">
+          <div class="flex justify-between text-slate-600">
+            <span>Subtotal Base:</span>
+            <span id="detail-order-subtotal" class="font-semibold text-slate-800"></span>
+          </div>
+          <div class="flex justify-between text-slate-600">
+            <span>Descuento / Ajuste Estrategia:</span>
+            <span id="detail-order-discount" class="font-semibold text-emerald-600"></span>
+          </div>
+          <div class="flex justify-between text-sm font-bold text-slate-900 pt-1 border-t border-blue-200">
+            <span>Monto Total Cobrado:</span>
+            <span id="detail-order-total" class="font-extrabold text-blue-700"></span>
+          </div>
+        </div>
+        <div class="pt-2 flex justify-end gap-2">
+          <button type="button" onclick="closeModalOrderDetails()" class="px-4 py-2 bg-slate-900 hover:bg-slate-800 text-white rounded-lg text-xs font-semibold">Cerrar</button>
+        </div>
       </div>
     </div>
   </div>
@@ -1479,6 +1589,17 @@
     }
 
     // ITERATOR PATTERN IMPLEMENTATION (RF11, RF12)
+    AppState.pagination = {
+      currentPage: 1,
+      pageSize: 4,
+      filteredList: null
+    };
+
+    function changePage(pageNumber) {
+      AppState.pagination.currentPage = pageNumber;
+      renderProductsTable(AppState.pagination.filteredList);
+    }
+
     function filterProducts() {
       const search = document.getElementById('product-search-input').value.toLowerCase();
       const cat = document.getElementById('product-category-filter').value;
@@ -1489,15 +1610,30 @@
         return matchesSearch && matchesCat;
       });
 
+      AppState.pagination.currentPage = 1;
+      AppState.pagination.filteredList = filtered;
       renderProductsTable(filtered);
     }
 
     function renderProductsTable(customList = null) {
-      const list = customList || AppState.products;
+      const fullList = customList !== null ? customList : AppState.products;
+      AppState.pagination.filteredList = customList !== null ? customList : null;
+
+      const totalItems = fullList.length;
+      const pageSize = AppState.pagination.pageSize || 4;
+      const totalPages = Math.ceil(totalItems / pageSize) || 1;
+      if (AppState.pagination.currentPage > totalPages) {
+        AppState.pagination.currentPage = totalPages;
+      }
+      const currentPage = AppState.pagination.currentPage || 1;
+      const startIndex = (currentPage - 1) * pageSize;
+      const pagedList = fullList.slice(startIndex, startIndex + pageSize);
+
       const tbody = document.getElementById('products-tbody');
+      if (!tbody) return;
       tbody.innerHTML = '';
 
-      list.forEach(p => {
+      pagedList.forEach(p => {
         const strategicPrice = calculateFinalPrice(p.basePrice);
         const isLow = p.stock <= p.minStock;
 
@@ -1512,7 +1648,7 @@
           <td class="p-3 font-bold ${isLow ? 'text-rose-600' : 'text-slate-800'}">${p.stock} unid.</td>
           <td class="p-3">
             <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isLow ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-800'}">
-              ${isLow ? 'Stock Bajo (Alerta)' : 'En Existencia'}
+              ${isLow ? 'Stock Bajo Crítico' : 'En Existencia'}
             </span>
           </td>
           <td class="p-3 text-right">
@@ -1524,7 +1660,140 @@
         tbody.appendChild(tr);
       });
 
-      document.getElementById('products-count-text').innerText = `Mostrando ${list.length} de ${AppState.products.length} productos`;
+      const countText = document.getElementById('products-count-text');
+      if (countText) {
+        countText.innerText = `Mostrando ${pagedList.length} de ${totalItems} productos (Página ${currentPage} de ${totalPages})`;
+      }
+
+      const badge = document.getElementById('iterator-status-badge');
+      if (badge) {
+        badge.innerText = `Página ${currentPage} de ${totalPages}`;
+      }
+
+      const paginationContainer = document.getElementById('products-pagination-controls');
+      if (paginationContainer) {
+        paginationContainer.innerHTML = '';
+        for (let i = 1; i <= totalPages; i++) {
+          const btn = document.createElement('button');
+          btn.setAttribute('onclick', `changePage(${i})`);
+          btn.className = i === currentPage 
+            ? 'px-2.5 py-1 bg-blue-600 text-white font-bold rounded shadow-sm text-xs' 
+            : 'px-2.5 py-1 bg-white border border-slate-300 rounded font-semibold text-slate-700 hover:bg-slate-100 text-xs';
+          btn.innerText = i;
+          paginationContainer.appendChild(btn);
+        }
+      }
+    }
+
+    // MODAL AGREGAR PRODUCTO
+    function openModalAddProduct() {
+      document.getElementById('modal-add-product').classList.remove('hidden');
+      document.getElementById('new-prod-sku').focus();
+    }
+
+    function closeModalAddProduct() {
+      document.getElementById('modal-add-product').classList.add('hidden');
+      document.getElementById('form-add-product').reset();
+    }
+
+    function submitAddProduct() {
+      const sku = document.getElementById('new-prod-sku').value.trim();
+      const name = document.getElementById('new-prod-name').value.trim();
+      const category = document.getElementById('new-prod-category').value;
+      const basePrice = parseFloat(document.getElementById('new-prod-price').value);
+      const stock = parseInt(document.getElementById('new-prod-stock').value);
+      const minStock = parseInt(document.getElementById('new-prod-min-stock').value);
+
+      if (!sku || !name || isNaN(basePrice) || isNaN(stock) || isNaN(minStock)) {
+        alert("Por favor complete todos los campos requeridos con valores válidos.");
+        return;
+      }
+
+      const newId = AppState.products.length + 1;
+      const newProduct = { id: newId, sku, name, category, basePrice, stock, minStock };
+      AppState.products.push(newProduct);
+
+      closeModalAddProduct();
+      renderAll();
+      alert(`¡Producto Registrado con Éxito!\n\nSKU: ${sku}\nProducto: ${name}\nPrecio Base: S/ ${basePrice.toFixed(2)}\nStock: ${stock} unidades (Mín: ${minStock})\n\nEl catálogo, la paginación del Iterator y el inventario han sido actualizados.`);
+    }
+
+    // EXPORTACIÓN DE REPORTE FINANCIERO (PROXY)
+    function exportFinancialReport() {
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += "TECHSOLUTIONS S.A. - REPORTE FINANCIERO Y BALANCE CONSOLIDADO\n";
+      csvContent += "Fecha de Emisión: 18/11/2026\n";
+      csvContent += "Moneda: Soles Peruanos (PEN - S/)\n\n";
+      csvContent += "Categoria,Unidades Vendidas,Ingresos Totales (S/),Costo de Ventas (S/),Utilidad Bruta (S/),Margen Bruto\n";
+      csvContent += "Tecnologia & Computo,124,168400.00,98200.00,70200.00,41.7%\n";
+      csvContent += "Accesorios & Perifericos,340,45200.00,22100.00,23100.00,51.1%\n";
+      csvContent += "Audio & Multimedia,95,32000.00,18100.00,13900.00,43.4%\n\n";
+      csvContent += "RESUMEN CONSOLIDADO\n";
+      csvContent += "Facturacion Bruta Mes,S/ 245600.00\n";
+      csvContent += "Costo de Mercaderia (COGS),S/ 138400.00\n";
+      csvContent += "Utilidad Neta Estimada,S/ 72180.00\n";
+      csvContent += "Comisiones Pasarelas,S/ 4210.00\n";
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "Reporte_Financiero_TechSolutions_Nov2026.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      alert("¡Reporte Financiero Exportado Exitosamente!\n\nSe ha generado y descargado el archivo 'Reporte_Financiero_TechSolutions_Nov2026.csv' con el balance consolidado, márgenes y métricas financieras.");
+    }
+
+    // GUARDAR CONFIGURACIÓN GENERAL
+    function saveGeneralConfiguration() {
+      const razon = document.getElementById('cfg-razon-social').value.trim();
+      const ruc = document.getElementById('cfg-ruc').value.trim();
+      const igv = document.getElementById('cfg-igv').value.trim();
+
+      if (!razon || !ruc || !igv) {
+        alert("Por favor complete los campos obligatorios de la configuración general.");
+        return;
+      }
+
+      alert(`¡Configuración Guardada Exitosamente!\n\nRazón Social: ${razon}\nRUC: ${ruc}\nTasa IGV: ${igv}\nMoneda: Soles Peruanos (PEN - S/)\n\nLos parámetros organizacionales han sido persistidos en el sistema.`);
+    }
+
+    // MODAL DETALLES DEL PEDIDO
+    function viewOrderDetails(orderId) {
+      const order = AppState.orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      document.getElementById('detail-order-id').innerText = order.id;
+      document.getElementById('detail-order-customer').innerText = order.customer;
+      document.getElementById('detail-order-date').innerText = order.date;
+      document.getElementById('detail-order-status').innerText = order.status;
+      document.getElementById('detail-order-status').className = `font-bold ${
+        order.status === 'PAGADO' ? 'text-emerald-600' :
+        order.status === 'PROCESADO' ? 'text-blue-600' :
+        order.status === 'CANCELADO' ? 'text-rose-600' : 'text-amber-600'
+      }`;
+      document.getElementById('detail-order-gateway').innerText = order.gateway || "N/A";
+      document.getElementById('detail-order-items').innerText = order.items;
+      document.getElementById('detail-order-subtotal').innerText = `S/ ${order.subtotal.toFixed(2)}`;
+      document.getElementById('detail-order-discount').innerText = `S/ ${order.discount.toFixed(2)}`;
+      document.getElementById('detail-order-total').innerText = `S/ ${order.total.toFixed(2)}`;
+
+      document.getElementById('modal-order-details').classList.remove('hidden');
+    }
+
+    function closeModalOrderDetails() {
+      document.getElementById('modal-order-details').classList.add('hidden');
+    }
+
+    // EDITAR COLABORADOR EXISTENTE
+    function openEditUserModal(name, email, role, status, permission) {
+      openNewUserModal();
+      document.getElementById('new-user-name').value = name;
+      document.getElementById('new-user-email').value = email;
+      document.getElementById('new-user-role').value = role;
+      document.getElementById('new-user-status').value = status;
+      document.getElementById('new-user-proxy-permission').value = permission;
     }
 
     // OBSERVER PATTERN IMPLEMENTATION (RF5, RF6)
@@ -1652,7 +1921,7 @@
                 Cancelar
               </button>
             ` : `
-              <span class="text-[11px] text-slate-400 italic">Comando Ejecutado</span>
+              <button onclick="viewOrderDetails('${o.id}')" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded text-xs transition">Detalle</button>
             `}
           </td>
         `;
@@ -1678,7 +1947,7 @@
             </span>
           </td>
           <td class="p-3 text-right">
-            <button onclick="switchScreen('pedidos')" class="text-blue-600 hover:underline font-semibold">Detalles</button>
+            <button onclick="viewOrderDetails('${o.id}')" class="text-blue-600 hover:underline font-semibold">Detalles</button>
           </td>
         `;
         tbody.appendChild(tr);
