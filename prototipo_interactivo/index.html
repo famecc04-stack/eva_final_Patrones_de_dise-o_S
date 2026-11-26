@@ -1,0 +1,1918 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechSolutions – Plataforma de Gestión Empresarial</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    .tab-active {
+      background-color: #1e40af;
+      color: #ffffff;
+    }
+  </style>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            },
+            zegel: '#d90429'
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-slate-100 text-slate-800 antialiased h-screen flex overflow-hidden">
+
+  <!-- ========================================================== -->
+  <!-- MODAL / PANTALLA 1: INICIO DE SESIÓN (LOGIN)              -->
+  <!-- ========================================================== -->
+  <div id="screen-login" class="fixed inset-0 z-50 bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
+      <div class="bg-gradient-to-r from-slate-900 via-blue-900 to-indigo-950 p-6 text-white text-center">
+        <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-600 mb-3 shadow-lg shadow-blue-500/30">
+          <i data-lucide="layers" class="w-6 h-6 text-white"></i>
+        </div>
+        <h1 class="text-2xl font-bold tracking-tight">TechSolutions S.A.</h1>
+        <p class="text-blue-200 text-xs mt-1">Plataforma de Gestión Empresarial para PYMES</p>
+      </div>
+
+      <div class="p-6">
+        <div class="mb-4">
+          <label class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-1">Simular Perfil / Rol (RBAC)</label>
+          <select id="login-role-selector" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm font-medium focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-slate-50">
+            <option value="Gerente">Gerente General (Acceso Total & Alertas Observer)</option>
+            <option value="Contador">Contador (Acceso Reportes Financieros Proxy)</option>
+            <option value="Administrador">Administrador de TI (Pasarelas & Precios)</option>
+            <option value="Compras">Personal de Compras (Alertas Stock & Inventario)</option>
+            <option value="Vendedor">Vendedor / Operador (Pedidos, Caja, Catálogo)</option>
+          </select>
+          <p class="text-[11px] text-slate-500 mt-1 italic">Selecciona un rol para probar las restricciones del patrón Proxy y RBAC.</p>
+        </div>
+
+        <div class="mb-3">
+          <label class="block text-xs font-medium text-slate-700 mb-1">Correo Electrónico o Usuario</label>
+          <div class="relative">
+            <i data-lucide="mail" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+            <input type="text" id="login-email" value="gerencia@techsolutions.pe" class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-xs font-medium text-slate-700 mb-1">Contraseña</label>
+          <div class="relative">
+            <i data-lucide="lock" class="w-4 h-4 text-slate-400 absolute left-3 top-3"></i>
+            <input type="password" value="••••••••••••" class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-blue-500">
+          </div>
+        </div>
+
+        <button onclick="handleLogin()" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2.5 px-4 rounded-lg text-sm shadow-md transition flex items-center justify-center gap-2">
+          <span>Ingresar a la Plataforma</span>
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+
+        <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+          <span>Evaluación Final – Zegel</span>
+          <span class="font-medium text-slate-700">Versión 1.0.0</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- BARRA LATERAL (SIDEBAR DE NAVEGACIÓN)                     -->
+  <!-- ========================================================== -->
+  <aside class="w-64 bg-slate-900 text-slate-300 flex flex-col shrink-0 border-r border-slate-800">
+    <!-- Brand -->
+    <div class="p-5 flex items-center gap-3 border-b border-slate-800 bg-slate-950">
+      <div class="w-9 h-9 rounded-xl bg-blue-600 flex items-center justify-center text-white shadow-md">
+        <i data-lucide="cpu" class="w-5 h-5"></i>
+      </div>
+      <div>
+        <h2 class="text-sm font-bold text-white tracking-wide">TechSolutions</h2>
+        <span class="text-[10px] text-blue-400 font-semibold uppercase tracking-wider">Gestión PYME S.A.</span>
+      </div>
+    </div>
+
+    <!-- User Profile Strip -->
+    <div class="p-3.5 mx-3 my-2 rounded-xl bg-slate-800/60 border border-slate-700/50 flex items-center gap-3">
+      <div class="w-8 h-8 rounded-full bg-gradient-to-tr from-blue-500 to-indigo-500 text-white flex items-center justify-center text-xs font-bold" id="sidebar-user-avatar">
+        GG
+      </div>
+      <div class="overflow-hidden">
+        <p class="text-xs font-semibold text-white truncate" id="sidebar-user-name">Estefanía Orellana</p>
+        <div class="flex items-center gap-1.5">
+          <span class="inline-block w-2 h-2 rounded-full bg-emerald-400"></span>
+          <p class="text-[11px] text-blue-300 font-medium" id="sidebar-user-role">Gerente General</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Navigation Menu -->
+    <nav class="flex-1 overflow-y-auto custom-scrollbar px-3 py-2 space-y-1 text-xs font-medium">
+      <div class="text-[10px] uppercase font-bold text-slate-400 px-3 pt-2 pb-1 tracking-wider">Operaciones Principales</div>
+      
+      <button onclick="switchScreen('dashboard')" id="nav-dashboard" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+        <i data-lucide="layout-dashboard" class="w-4 h-4 text-blue-400"></i>
+        <span>Dashboard General</span>
+      </button>
+
+      <button onclick="switchScreen('productos')" id="nav-productos" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+        <i data-lucide="box" class="w-4 h-4 text-emerald-400"></i>
+        <span>Catálogo de Productos</span>
+        <span class="ml-auto text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">Iterator</span>
+      </button>
+
+      <button onclick="switchScreen('inventario')" id="nav-inventario" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+        <i data-lucide="warehouse" class="w-4 h-4 text-amber-400"></i>
+        <span>Inventario y Existencias</span>
+      </button>
+
+      <button onclick="switchScreen('pedidos')" id="nav-pedidos" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+        <i data-lucide="shopping-cart" class="w-4 h-4 text-indigo-400"></i>
+        <span>Gestión de Pedidos</span>
+        <span class="ml-auto text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">Command</span>
+      </button>
+
+      <button onclick="switchScreen('pagos')" id="nav-pagos" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+        <i data-lucide="credit-card" class="w-4 h-4 text-teal-400"></i>
+        <span>Pasarelas de Pago</span>
+        <span class="ml-auto text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">Adapter</span>
+      </button>
+
+      <div class="text-[10px] uppercase font-bold text-slate-400 px-3 pt-3 pb-1 tracking-wider">Estrategia & Control</div>
+
+      <button onclick="switchScreen('precios')" id="nav-precios" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+        <i data-lucide="tag" class="w-4 h-4 text-rose-400"></i>
+        <span>Estrategias de Precios</span>
+        <span class="ml-auto text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">Strategy</span>
+      </button>
+
+      <button onclick="switchScreen('reportes')" id="nav-reportes" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+        <i data-lucide="bar-chart-3" class="w-4 h-4 text-violet-400"></i>
+        <span>Reportes Financieros</span>
+        <span class="ml-auto text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">Proxy</span>
+      </button>
+
+      <button onclick="switchScreen('historial')" id="nav-historial" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+        <i data-lucide="history" class="w-4 h-4 text-cyan-400"></i>
+        <span>Historial & Deshacer</span>
+        <span class="ml-auto text-[9px] bg-slate-800 text-slate-400 px-1.5 py-0.5 rounded border border-slate-700">Memento</span>
+      </button>
+
+      <div class="text-[10px] uppercase font-bold text-slate-400 px-3 pt-3 pb-1 tracking-wider">Sistema</div>
+
+      <button onclick="switchScreen('usuarios')" id="nav-usuarios" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+        <i data-lucide="users" class="w-4 h-4 text-sky-400"></i>
+        <span>Usuarios y Roles</span>
+      </button>
+
+      <button onclick="switchScreen('configuracion')" id="nav-configuracion" class="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg hover:bg-slate-800 hover:text-white transition text-left">
+        <i data-lucide="settings" class="w-4 h-4 text-slate-400"></i>
+        <span>Configuración General</span>
+      </button>
+    </nav>
+
+    <!-- Footer Logout / Switch -->
+    <div class="p-3 border-t border-slate-800 bg-slate-950/50 flex items-center justify-between">
+      <button onclick="openLoginModal()" class="flex items-center gap-2 text-xs text-slate-400 hover:text-white transition">
+        <i data-lucide="log-out" class="w-4 h-4"></i>
+        <span>Cambiar de Rol</span>
+      </button>
+      <span class="text-[10px] text-slate-500">Zegel 2026</span>
+    </div>
+  </aside>
+
+  <!-- ========================================================== -->
+  <!-- CONTENIDO PRINCIPAL                                       -->
+  <!-- ========================================================== -->
+  <div class="flex-1 flex flex-col overflow-hidden">
+    
+    <!-- Topbar -->
+    <header class="h-16 bg-white border-b border-slate-200 flex items-center justify-between px-6 shrink-0 z-10">
+      <div class="flex items-center gap-4">
+        <h1 id="topbar-title" class="text-lg font-bold text-slate-900">Dashboard General</h1>
+        <div id="topbar-strategy-pill" class="hidden md:flex items-center gap-1.5 bg-blue-50 text-blue-700 text-xs px-2.5 py-1 rounded-full border border-blue-200">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-600"></i>
+          <span>Estrategia: <strong id="topbar-strategy-name">Precio Estándar</strong></span>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <!-- Observer Notification Bell -->
+        <div class="relative">
+          <button onclick="toggleAlertsDropdown()" class="relative p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-full transition">
+            <i data-lucide="bell" class="w-5 h-5"></i>
+            <span id="alerts-badge" class="absolute top-1 right-1 w-2.5 h-2.5 bg-rose-500 rounded-full ring-2 ring-white"></span>
+          </button>
+
+          <!-- Dropdown Alertas Observer -->
+          <div id="alerts-dropdown" class="hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-2xl border border-slate-200 p-4 z-50">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-2 mb-3">
+              <div class="flex items-center gap-2">
+                <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-500"></i>
+                <h4 class="text-xs font-bold text-slate-800 uppercase tracking-wide">Alertas de Stock (Observer)</h4>
+              </div>
+              <span class="text-[10px] bg-rose-100 text-rose-700 font-bold px-2 py-0.5 rounded-full" id="alerts-count-text">2 Críticas</span>
+            </div>
+            <div class="space-y-2 text-xs" id="alerts-list">
+              <div class="p-2.5 bg-rose-50 border border-rose-200 rounded-lg">
+                <div class="flex justify-between items-start">
+                  <strong class="text-rose-800 font-semibold">Laptop HP Pavilion 15</strong>
+                  <span class="text-[10px] text-rose-600 font-bold">Stock: 2 (Mín: 5)</span>
+                </div>
+                <p class="text-rose-700 text-[11px] mt-0.5">Notificación enviada a Gerente y Compras.</p>
+              </div>
+              <div class="p-2.5 bg-amber-50 border border-amber-200 rounded-lg">
+                <div class="flex justify-between items-start">
+                  <strong class="text-amber-800 font-semibold">Mouse Inalámbrico Logitech</strong>
+                  <span class="text-[10px] text-amber-600 font-bold">Stock: 4 (Mín: 10)</span>
+                </div>
+                <p class="text-amber-700 text-[11px] mt-0.5">Reabastecimiento sugerido en almacén.</p>
+              </div>
+            </div>
+            <button onclick="switchScreen('inventario'); toggleAlertsDropdown();" class="w-full mt-3 text-center text-xs text-blue-600 font-semibold hover:underline block">
+              Ir a Inventario y Configurar Stock →
+            </button>
+          </div>
+        </div>
+
+        <!-- Current User Role Chip -->
+        <div class="flex items-center gap-2 pl-3 border-l border-slate-200">
+          <div class="text-right">
+            <span class="block text-xs font-bold text-slate-800" id="topbar-user-name">Fabiola Cadillo</span>
+            <span class="block text-[10px] text-slate-500" id="topbar-user-role">Administrador TI</span>
+          </div>
+          <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-800 font-bold flex items-center justify-center text-xs">
+            FC
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Views Container -->
+    <main class="flex-1 overflow-y-auto custom-scrollbar p-6 bg-slate-50">
+      
+      <!-- ========================================== -->
+      <!-- PANTALLA 2: DASHBOARD PRINCIPAL            -->
+      <!-- ========================================== -->
+      <section id="view-dashboard" class="space-y-6">
+        <!-- Tarjetas KPIs -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-medium text-slate-500">Ventas del Día</p>
+              <h3 class="text-2xl font-bold text-slate-900 mt-1" id="kpi-ventas">S/ 14,850.00</h3>
+              <span class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1 mt-1">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> +18.4% vs ayer
+              </span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <i data-lucide="dollar-sign" class="w-6 h-6"></i>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-medium text-slate-500">Pedidos Pendientes</p>
+              <h3 class="text-2xl font-bold text-slate-900 mt-1" id="kpi-pedidos">8 Órdenes</h3>
+              <span class="text-[11px] text-amber-600 font-semibold flex items-center gap-1 mt-1">
+                <i data-lucide="clock" class="w-3.5 h-3.5"></i> 3 por despachar
+              </span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <i data-lucide="shopping-bag" class="w-6 h-6"></i>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-medium text-slate-500">Stock Crítico (Observer)</p>
+              <h3 class="text-2xl font-bold text-rose-600 mt-1" id="kpi-stock-bajo">2 Productos</h3>
+              <span class="text-[11px] text-rose-600 font-semibold flex items-center gap-1 mt-1">
+                <i data-lucide="alert-circle" class="w-3.5 h-3.5"></i> Requiere reposición
+              </span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center">
+              <i data-lucide="alert-octagon" class="w-6 h-6"></i>
+            </div>
+          </div>
+
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-xs font-medium text-slate-500">Ingresos Mensuales</p>
+              <h3 class="text-2xl font-bold text-slate-900 mt-1">S/ 182,400.00</h3>
+              <span class="text-[11px] text-emerald-600 font-semibold flex items-center gap-1 mt-1">
+                <i data-lucide="trending-up" class="w-3.5 h-3.5"></i> Meta 85% alcanzada
+              </span>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <i data-lucide="wallet" class="w-6 h-6"></i>
+            </div>
+          </div>
+        </div>
+
+        <!-- Gráficos y Actividad -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <!-- Gráfico -->
+          <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm lg:col-span-2">
+            <div class="flex items-center justify-between mb-4">
+              <div>
+                <h3 class="text-sm font-bold text-slate-900">Evolución de Ventas Semanales</h3>
+                <p class="text-xs text-slate-500">Comparativa de ingresos por canal digital en Lima</p>
+              </div>
+              <span class="text-xs font-semibold px-2.5 py-1 bg-slate-100 text-slate-600 rounded-md">Últimos 7 días</span>
+            </div>
+            <div class="h-64">
+              <canvas id="dashboardChart"></canvas>
+            </div>
+          </div>
+
+          <!-- Accesos Rápidos & Arquitectura -->
+          <div class="space-y-4">
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+              <h3 class="text-sm font-bold text-slate-900 mb-3">Accesos Directos</h3>
+              <div class="grid grid-cols-2 gap-2 text-xs">
+                <button onclick="switchScreen('pedidos')" class="p-3 bg-blue-50 text-blue-700 font-semibold rounded-lg hover:bg-blue-100 flex flex-col items-center gap-1">
+                  <i data-lucide="plus-circle" class="w-5 h-5 text-blue-600"></i>
+                  <span>Nuevo Pedido</span>
+                </button>
+                <button onclick="switchScreen('productos')" class="p-3 bg-emerald-50 text-emerald-700 font-semibold rounded-lg hover:bg-emerald-100 flex flex-col items-center gap-1">
+                  <i data-lucide="search" class="w-5 h-5 text-emerald-600"></i>
+                  <span>Ver Catálogo</span>
+                </button>
+                <button onclick="switchScreen('pagos')" class="p-3 bg-indigo-50 text-indigo-700 font-semibold rounded-lg hover:bg-indigo-100 flex flex-col items-center gap-1">
+                  <i data-lucide="sliders" class="w-5 h-5 text-indigo-600"></i>
+                  <span>Pasarelas (Adapter)</span>
+                </button>
+                <button onclick="switchScreen('reportes')" class="p-3 bg-purple-50 text-purple-700 font-semibold rounded-lg hover:bg-purple-100 flex flex-col items-center gap-1">
+                  <i data-lucide="shield-check" class="w-5 h-5 text-purple-600"></i>
+                  <span>Finanzas (Proxy)</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Patrones Implementados Card -->
+            <div class="bg-gradient-to-br from-slate-900 to-blue-950 text-white p-4 rounded-xl shadow-md border border-slate-800">
+              <div class="flex items-center gap-2 mb-2">
+                <i data-lucide="shield" class="w-4 h-4 text-blue-400"></i>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-blue-300">Patrones en Ejecución</h4>
+              </div>
+              <ul class="text-[11px] space-y-1.5 text-slate-300">
+                <li>• <strong>Adapter:</strong> PayPal, Yape, Plin activos.</li>
+                <li>• <strong>Proxy:</strong> Reportes filtrados por RBAC.</li>
+                <li>• <strong>Observer:</strong> Suscripción activa a stock crítico.</li>
+                <li>• <strong>Command & Memento:</strong> Historial y Undo listos.</li>
+                <li>• <strong>Strategy:</strong> Pricing dinámico configurable.</li>
+                <li>• <strong>Iterator:</strong> Catálogo paginado desacoplado.</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabla Actividad Reciente -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-4 border-b border-slate-200 flex justify-between items-center">
+            <h3 class="text-sm font-bold text-slate-900">Últimos Pedidos Procesados</h3>
+            <button onclick="switchScreen('pedidos')" class="text-xs text-blue-600 font-semibold hover:underline">Ver todos los pedidos →</button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 uppercase font-semibold text-[10px]">
+                <tr>
+                  <th class="p-3">Código</th>
+                  <th class="p-3">Cliente</th>
+                  <th class="p-3">Monto</th>
+                  <th class="p-3">Pasarela</th>
+                  <th class="p-3">Estado</th>
+                  <th class="p-3 text-right">Acción</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100" id="recent-orders-tbody">
+                <!-- Inyectado dinámicamente -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- PANTALLA 3: GESTIÓN DE PRODUCTOS (ITERATOR)-->
+      <!-- ========================================== -->
+      <section id="view-productos" class="hidden space-y-4">
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row gap-3 items-center justify-between">
+          <div class="flex-1 w-full md:w-auto flex gap-3">
+            <div class="relative flex-1">
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3 top-2.5"></i>
+              <input type="text" id="product-search-input" onkeyup="filterProducts()" placeholder="Buscar producto por nombre o SKU..." class="w-full pl-9 pr-3 py-2 border border-slate-300 rounded-lg text-xs focus:ring-2 focus:ring-blue-500">
+            </div>
+            <select id="product-category-filter" onchange="filterProducts()" class="border border-slate-300 rounded-lg text-xs px-3 py-2 focus:ring-2 focus:ring-blue-500">
+              <option value="ALL">Todas las Categorías</option>
+              <option value="Tecnología">Tecnología & Cómputo</option>
+              <option value="Accesorios">Accesorios & Periféricos</option>
+              <option value="Audio">Audio & Multimedia</option>
+              <option value="Oficina">Mobiliario de Oficina</option>
+            </select>
+          </div>
+          <button onclick="openModalAddProduct()" class="w-full md:w-auto bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center justify-center gap-2 transition">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Agregar Producto</span>
+          </button>
+        </div>
+
+        <!-- Banner Explicativo Iterator -->
+        <div class="bg-blue-50 border border-blue-200 rounded-lg p-3 text-xs text-blue-900 flex items-center justify-between">
+          <div class="flex items-center gap-2">
+            <i data-lucide="info" class="w-4 h-4 text-blue-600 shrink-0"></i>
+            <span><strong>Patrón Iterator en Acción:</strong> El catálogo se recorre mediante un iterador desacoplado de la estructura interna, garantizando paginación ágil y filtros en tiempo real sin recargar datos pesados.</span>
+          </div>
+          <span class="text-[11px] font-bold text-blue-700 bg-blue-100 px-2 py-0.5 rounded" id="iterator-status-badge">Página 1 de 2</span>
+        </div>
+
+        <!-- Tabla Productos -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 uppercase font-semibold text-[10px]">
+              <tr>
+                <th class="p-3">SKU</th>
+                <th class="p-3">Producto</th>
+                <th class="p-3">Categoría</th>
+                <th class="p-3">Precio Base</th>
+                <th class="p-3">Precio con Estrategia</th>
+                <th class="p-3">Stock</th>
+                <th class="p-3">Estado</th>
+                <th class="p-3 text-right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="products-tbody" class="divide-y divide-slate-100">
+              <!-- Renderizado por JS -->
+            </tbody>
+          </table>
+          <div class="p-3 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
+            <span id="products-count-text">Mostrando 6 de 10 productos</span>
+            <div class="flex gap-1" id="products-pagination-controls">
+              <button onclick="changePage(1)" class="px-2.5 py-1 bg-white border border-slate-300 rounded font-semibold text-blue-600 hover:bg-slate-100">1</button>
+              <button onclick="changePage(2)" class="px-2.5 py-1 bg-white border border-slate-300 rounded hover:bg-slate-100">2</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- PANTALLA 4: INVENTARIO (OBSERVER CONFIG)   -->
+      <!-- ========================================== -->
+      <section id="view-inventario" class="hidden space-y-4">
+        <div class="bg-gradient-to-r from-amber-600 to-orange-600 text-white p-4 rounded-xl shadow-md flex items-center justify-between">
+          <div>
+            <h2 class="text-sm font-bold uppercase tracking-wider flex items-center gap-2">
+              <i data-lucide="bell-ring" class="w-5 h-5"></i>
+              Control de Inventario y Patrón Observer
+            </h2>
+            <p class="text-xs text-amber-100 mt-0.5">Define el stock mínimo por producto. Cuando las existencias caigan bajo ese número, se enviará una alerta automática reactiva a Gerente y Compras.</p>
+          </div>
+          <button onclick="triggerSimulatedSale()" class="bg-white text-amber-800 text-xs font-bold px-3.5 py-2 rounded-lg hover:bg-amber-50 shadow transition flex items-center gap-1.5">
+            <i data-lucide="zap" class="w-4 h-4 text-amber-600"></i>
+            <span>Simular Venta y Probar Alerta</span>
+          </button>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-4 border-b border-slate-200 flex justify-between items-center">
+            <h3 class="text-sm font-bold text-slate-900">Configuración de Umbrales de Stock Mínimo (RF6)</h3>
+            <span class="text-xs text-slate-500">Monitoreo reactivo en tiempo real</span>
+          </div>
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 uppercase font-semibold text-[10px]">
+              <tr>
+                <th class="p-3">Producto</th>
+                <th class="p-3">Stock Físico Actual</th>
+                <th class="p-3">Stock Mínimo (Configurable)</th>
+                <th class="p-3">Estado de Alerta</th>
+                <th class="p-3">Observadores Suscritos</th>
+                <th class="p-3 text-right">Guardar Umbral</th>
+              </tr>
+            </thead>
+            <tbody id="inventory-tbody" class="divide-y divide-slate-100">
+              <!-- Renderizado por JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- PANTALLA 5: GESTIÓN DE PEDIDOS (COMMAND)   -->
+      <!-- ========================================== -->
+      <section id="view-pedidos" class="hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">Gestión de Pedidos</h2>
+            <p class="text-xs text-slate-500">Encapsulación de acciones de pedidos como objetos Command (RF7) y Memento para reversión (RF8)</p>
+          </div>
+          <button onclick="openModalCreateOrder()" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-2 shadow-sm transition">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>Crear Nuevo Pedido</span>
+          </button>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 uppercase font-semibold text-[10px]">
+              <tr>
+                <th class="p-3">N° Pedido</th>
+                <th class="p-3">Cliente</th>
+                <th class="p-3">Fecha y Hora</th>
+                <th class="p-3">Subtotal</th>
+                <th class="p-3">Descuento</th>
+                <th class="p-3">Total (S/)</th>
+                <th class="p-3">Estado</th>
+                <th class="p-3 text-right">Acciones Command</th>
+              </tr>
+            </thead>
+            <tbody id="orders-tbody" class="divide-y divide-slate-100">
+              <!-- Renderizado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- PANTALLA 6: PROCESAMIENTO DE PAGOS (ADAPTER)-->
+      <!-- ========================================== -->
+      <section id="view-pagos" class="hidden space-y-5">
+        <div class="bg-slate-900 text-white p-5 rounded-xl border border-slate-800 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+          <div>
+            <div class="flex items-center gap-2 text-teal-400 font-bold text-xs uppercase tracking-wider mb-1">
+              <i data-lucide="cpu" class="w-4 h-4"></i>
+              <span>Patrón Adapter en Pasarelas de Pago</span>
+            </div>
+            <h2 class="text-lg font-bold">Integración Unificada de Pagos Digitales (RF1)</h2>
+            <p class="text-xs text-slate-300 mt-1 max-w-xl">El sistema interactúa con una interfaz polimórfica <code class="text-teal-300 bg-slate-800 px-1 py-0.5 rounded">IPaymentGateway</code>. Los adaptadores específicos convierten las llamadas heterogéneas de PayPal, Yape y Plin sin modificar el flujo de ventas.</p>
+          </div>
+          <span class="text-xs bg-teal-500/20 text-teal-300 border border-teal-500/30 px-3 py-1.5 rounded-lg font-mono">Status: Pasarelas Operativas</span>
+        </div>
+
+        <!-- Habilitar / Deshabilitar Pasarelas (RF2) -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
+            <div>
+              <h3 class="text-sm font-bold text-slate-900">Panel de Configuración de Pasarelas (RF2)</h3>
+              <p class="text-xs text-slate-500">El administrador puede habilitar o deshabilitar métodos de pago en tiempo real.</p>
+            </div>
+            <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">Control Exclusivo Admin</span>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Yape Adapter Card -->
+            <div class="p-4 rounded-xl border border-slate-200 hover:border-purple-300 transition bg-gradient-to-b from-white to-purple-50/30">
+              <div class="flex justify-between items-center mb-3">
+                <span class="w-10 h-10 rounded-xl bg-purple-600 text-white font-bold flex items-center justify-center text-xs shadow-md shadow-purple-500/20">
+                  Yape
+                </span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="gateway-yape-toggle" checked onchange="toggleGateway('Yape')" class="sr-only peer">
+                  <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-600"></div>
+                </label>
+              </div>
+              <h4 class="text-sm font-bold text-slate-800">Yape (BCP / Billetera Móvil)</h4>
+              <p class="text-xs text-slate-500 mt-1">Cobros instantáneos mediante código QR y confirmación de número de teléfono.</p>
+              <div class="mt-3 text-[11px] font-mono text-purple-700 bg-purple-100/60 p-1.5 rounded">
+                Clase: YapePaymentAdapter
+              </div>
+            </div>
+
+            <!-- Plin Adapter Card -->
+            <div class="p-4 rounded-xl border border-slate-200 hover:border-sky-300 transition bg-gradient-to-b from-white to-sky-50/30">
+              <div class="flex justify-between items-center mb-3">
+                <span class="w-10 h-10 rounded-xl bg-sky-500 text-white font-bold flex items-center justify-center text-xs shadow-md shadow-sky-500/20">
+                  Plin
+                </span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="gateway-plin-toggle" checked onchange="toggleGateway('Plin')" class="sr-only peer">
+                  <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-sky-500"></div>
+                </label>
+              </div>
+              <h4 class="text-sm font-bold text-slate-800">Plin (BBVA / Interbank / Scotiabank)</h4>
+              <p class="text-xs text-slate-500 mt-1">Transferencias interbancarias inmediatas sin comisiones para el comprador.</p>
+              <div class="mt-3 text-[11px] font-mono text-sky-700 bg-sky-100/60 p-1.5 rounded">
+                Clase: PlinPaymentAdapter
+              </div>
+            </div>
+
+            <!-- PayPal Adapter Card -->
+            <div class="p-4 rounded-xl border border-slate-200 hover:border-blue-300 transition bg-gradient-to-b from-white to-blue-50/30">
+              <div class="flex justify-between items-center mb-3">
+                <span class="w-10 h-10 rounded-xl bg-blue-700 text-white font-bold flex items-center justify-center text-xs shadow-md shadow-blue-600/20">
+                  PayPal
+                </span>
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" id="gateway-paypal-toggle" checked onchange="toggleGateway('PayPal')" class="sr-only peer">
+                  <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-700"></div>
+                </label>
+              </div>
+              <h4 class="text-sm font-bold text-slate-800">PayPal Express Checkout</h4>
+              <p class="text-xs text-slate-500 mt-1">Transacciones internacionales y tarjetas de crédito mediante token REST.</p>
+              <div class="mt-3 text-[11px] font-mono text-blue-700 bg-blue-100/60 p-1.5 rounded">
+                Clase: PayPalPaymentAdapter
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulador de Checkout de Pago -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <h3 class="text-sm font-bold text-slate-900 mb-3">Simulador Interactivo de Cobro mediante Adapter</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-center">
+            <div>
+              <label class="block text-xs font-medium text-slate-700 mb-1">Monto de Prueba (S/)</label>
+              <input type="number" id="sim-payment-amount" value="350.00" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-bold text-slate-800">
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-700 mb-1">Seleccionar Pasarela</label>
+              <select id="sim-payment-gateway" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-semibold">
+                <option value="Yape">Yape (QR / Teléfono)</option>
+                <option value="Plin">Plin (Interbancario)</option>
+                <option value="PayPal">PayPal (Tarjeta / Dólares)</option>
+              </select>
+            </div>
+            <div class="pt-5">
+              <button onclick="processSimulatedPayment()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-semibold py-2 px-4 rounded-lg text-xs transition flex items-center justify-center gap-2">
+                <i data-lucide="check-circle" class="w-4 h-4"></i>
+                <span>Procesar Pago con Adapter</span>
+              </button>
+            </div>
+          </div>
+
+          <div id="payment-result-box" class="hidden mt-4 p-4 rounded-lg text-xs"></div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- PANTALLA 7: CONFIGURACIÓN DE PRECIOS       -->
+      <!-- ========================================== -->
+      <section id="view-precios" class="hidden space-y-5">
+        <div class="bg-gradient-to-r from-rose-900 via-pink-900 to-rose-950 text-white p-5 rounded-xl shadow-md flex justify-between items-center">
+          <div>
+            <div class="flex items-center gap-2 text-rose-300 text-xs font-bold uppercase tracking-wider mb-1">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>Patrón Strategy en Políticas de Precios</span>
+            </div>
+            <h2 class="text-lg font-bold">Motor Dinámico de Estrategias de Tarificación (RF9, RF10)</h2>
+            <p class="text-xs text-rose-200 mt-0.5">El administrador puede conmutar la política comercial activa del negocio sin modificar el código fuente de cálculo.</p>
+          </div>
+          <span class="text-xs bg-rose-500/30 text-rose-200 border border-rose-400/40 px-3 py-1.5 rounded-lg font-bold">
+            Activa: <span id="strategy-current-label">Estándar</span>
+          </span>
+        </div>
+
+        <!-- Selector de Estrategia -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <!-- Estrategia Estándar -->
+          <div onclick="selectPricingStrategy('ESTANDAR')" id="card-strat-estandar" class="cursor-pointer p-5 rounded-xl border-2 border-blue-600 bg-blue-50/40 shadow-sm transition relative">
+            <div class="flex items-center justify-between mb-2">
+              <span class="w-8 h-8 rounded-lg bg-blue-600 text-white flex items-center justify-center text-xs font-bold">1</span>
+              <span id="badge-strat-estandar" class="text-[10px] bg-blue-600 text-white font-bold px-2 py-0.5 rounded-full">ACTIVA</span>
+            </div>
+            <h3 class="text-sm font-bold text-slate-900">Precio Estándar</h3>
+            <p class="text-xs text-slate-500 mt-1">Tarifa normal de catálogo sin modificaciones promocionales ni recargos dinámicos.</p>
+            <div class="mt-4 pt-3 border-t border-slate-200 text-xs text-slate-600 font-mono">
+              Fórmula: Total = Base * Cantidad
+            </div>
+          </div>
+
+          <!-- Estrategia Descuento -->
+          <div onclick="selectPricingStrategy('DESCUENTO')" id="card-strat-descuento" class="cursor-pointer p-5 rounded-xl border-2 border-slate-200 bg-white hover:border-slate-300 shadow-sm transition relative">
+            <div class="flex items-center justify-between mb-2">
+              <span class="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center text-xs font-bold">2</span>
+              <span id="badge-strat-descuento" class="hidden text-[10px] bg-emerald-600 text-white font-bold px-2 py-0.5 rounded-full">ACTIVA</span>
+            </div>
+            <h3 class="text-sm font-bold text-slate-900">Descuento Porcentual (15%)</h3>
+            <p class="text-xs text-slate-500 mt-1">Campaña promocional Cyber Zegel. Aplica un 15% de deducción automática a todo el carrito.</p>
+            <div class="mt-4 pt-3 border-t border-slate-200 text-xs text-slate-600 font-mono">
+              Fórmula: Total = Base * 0.85
+            </div>
+          </div>
+
+          <!-- Estrategia Dinámica -->
+          <div onclick="selectPricingStrategy('DINAMICO')" id="card-strat-dinamico" class="cursor-pointer p-5 rounded-xl border-2 border-slate-200 bg-white hover:border-slate-300 shadow-sm transition relative">
+            <div class="flex items-center justify-between mb-2">
+              <span class="w-8 h-8 rounded-lg bg-purple-600 text-white flex items-center justify-center text-xs font-bold">3</span>
+              <span id="badge-strat-dinamico" class="hidden text-[10px] bg-purple-600 text-white font-bold px-2 py-0.5 rounded-full">ACTIVA</span>
+            </div>
+            <h3 class="text-sm font-bold text-slate-900">Precio Dinámico (+10% Demanda)</h3>
+            <p class="text-xs text-slate-500 mt-1">Ajuste por temporada alta o alta demanda en horario punta comercial.</p>
+            <div class="mt-4 pt-3 border-t border-slate-200 text-xs text-slate-600 font-mono">
+              Fórmula: Total = Base * 1.10
+            </div>
+          </div>
+        </div>
+
+        <!-- Simulación en Vivo -->
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <h3 class="text-sm font-bold text-slate-900 mb-3">Simulación Comparativa del Cálculo (Strategy)</h3>
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-600 uppercase font-semibold text-[10px]">
+              <tr>
+                <th class="p-3">Producto Ejemplo</th>
+                <th class="p-3">Precio Base</th>
+                <th class="p-3">Cálculo Estándar</th>
+                <th class="p-3">Cálculo con Descuento (-15%)</th>
+                <th class="p-3">Cálculo Dinámico (+10%)</th>
+                <th class="p-3 text-right">Precio Vigente Activo</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100" id="pricing-sim-tbody">
+              <!-- Renderizado por JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- PANTALLA 8: REPORTES FINANCIEROS (PROXY)   -->
+      <!-- ========================================== -->
+      <section id="view-reportes" class="hidden space-y-5">
+        <!-- Proxy Alert Banner / Access Gate -->
+        <div id="proxy-access-denied" class="hidden bg-rose-50 border-2 border-rose-300 rounded-xl p-8 text-center">
+          <div class="w-16 h-16 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto mb-4">
+            <i data-lucide="shield-alert" class="w-8 h-8"></i>
+          </div>
+          <h2 class="text-lg font-bold text-rose-900">Acceso Bloqueado por FinancialReportProxy</h2>
+          <p class="text-xs text-rose-700 max-w-md mx-auto mt-2 leading-relaxed">
+            Tu rol actual es <strong id="denied-current-role" class="underline">Vendedor</strong>. En cumplimiento del <strong>RF3 y RF4</strong> de TechSolutions S.A., únicamente los colaboradores con rol de <strong>Gerente General</strong> o <strong>Contador</strong> están autorizados a visualizar reportes financieros confidenciales.
+          </p>
+          <div class="mt-5 flex justify-center gap-3">
+            <button onclick="setSimulatedRole('Gerente')" class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
+              Cambiar a rol Gerente y Desbloquear
+            </button>
+            <button onclick="setSimulatedRole('Contador')" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
+              Cambiar a rol Contador y Desbloquear
+            </button>
+          </div>
+        </div>
+
+        <!-- Contenido Autorizado del Reporte -->
+        <div id="proxy-access-granted" class="space-y-5">
+          <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm flex flex-col md:flex-row justify-between items-center gap-3">
+            <div>
+              <div class="flex items-center gap-2">
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-100 text-emerald-800">
+                  <i data-lucide="check-circle-2" class="w-3 h-3 mr-1"></i> Autorizado por Proxy
+                </span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-blue-100 text-blue-800" id="proxy-cache-badge">
+                  Caché Proxy: ACTIVA (300s TTL)
+                </span>
+              </div>
+              <h2 class="text-base font-bold text-slate-900 mt-1">Balance Financiero y Reporte de Ventas PYME</h2>
+            </div>
+            <div class="flex gap-2">
+              <button onclick="refreshReportCache()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+                <i data-lucide="refresh-cw" class="w-3.5 h-3.5"></i>
+                <span>Refrescar Caché Proxy</span>
+              </button>
+              <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-3 py-1.5 rounded-lg flex items-center gap-1.5 transition">
+                <i data-lucide="download" class="w-3.5 h-3.5"></i>
+                <span>Exportar Excel / PDF</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Métricas Financieras Confidenciales -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <p class="text-xs text-slate-500 font-medium">Facturación Bruta (Mes)</p>
+              <h3 class="text-xl font-bold text-slate-900 mt-1">S/ 245,600.00</h3>
+              <p class="text-[11px] text-emerald-600 font-medium mt-1">+14.2% respecto a mes previo</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <p class="text-xs text-slate-500 font-medium">Costo de Mercadería (COGS)</p>
+              <h3 class="text-xl font-bold text-slate-900 mt-1">S/ 138,400.00</h3>
+              <p class="text-[11px] text-slate-500 font-medium mt-1">Margen comercial 43.6%</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <p class="text-xs text-slate-500 font-medium">Utilidad Neta Estimada</p>
+              <h3 class="text-xl font-bold text-emerald-600 mt-1">S/ 72,180.00</h3>
+              <p class="text-[11px] text-emerald-700 font-medium mt-1">Deducido IGV 18% y comisiones</p>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+              <p class="text-xs text-slate-500 font-medium">Comisiones Pasarelas</p>
+              <h3 class="text-xl font-bold text-rose-600 mt-1">S/ 4,210.00</h3>
+              <p class="text-[11px] text-slate-500 font-medium mt-1">PayPal (3.9%) / Yape/Plin (1.5%)</p>
+            </div>
+          </div>
+
+          <!-- Tabla Detallada Financiera -->
+          <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="p-4 border-b border-slate-200 flex justify-between items-center">
+              <h3 class="text-sm font-bold text-slate-900">Desglose de Ingresos por Línea de Producto</h3>
+              <span class="text-xs text-slate-500">Período: Noviembre 2026</span>
+            </div>
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 text-slate-600 uppercase font-semibold text-[10px]">
+                <tr>
+                  <th class="p-3">Categoría de Producto</th>
+                  <th class="p-3">Unidades Vendidas</th>
+                  <th class="p-3">Ingresos Totales (S/)</th>
+                  <th class="p-3">Costo de Ventas (S/)</th>
+                  <th class="p-3">Utilidad Bruta (S/)</th>
+                  <th class="p-3 text-right">Margen Bruto</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr>
+                  <td class="p-3 font-semibold text-slate-900">Tecnología & Cómputo</td>
+                  <td class="p-3">124 unid.</td>
+                  <td class="p-3 font-bold text-slate-900">S/ 168,400.00</td>
+                  <td class="p-3 text-slate-600">S/ 98,200.00</td>
+                  <td class="p-3 font-bold text-emerald-600">S/ 70,200.00</td>
+                  <td class="p-3 text-right font-bold text-blue-600">41.7%</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-slate-900">Accesorios & Periféricos</td>
+                  <td class="p-3">340 unid.</td>
+                  <td class="p-3 font-bold text-slate-900">S/ 45,200.00</td>
+                  <td class="p-3 text-slate-600">S/ 22,100.00</td>
+                  <td class="p-3 font-bold text-emerald-600">S/ 23,100.00</td>
+                  <td class="p-3 text-right font-bold text-blue-600">51.1%</td>
+                </tr>
+                <tr>
+                  <td class="p-3 font-semibold text-slate-900">Audio & Multimedia</td>
+                  <td class="p-3">95 unid.</td>
+                  <td class="p-3 font-bold text-slate-900">S/ 32,000.00</td>
+                  <td class="p-3 text-slate-600">S/ 18,100.00</td>
+                  <td class="p-3 font-bold text-emerald-600">S/ 13,900.00</td>
+                  <td class="p-3 text-right font-bold text-blue-600">43.4%</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- PANTALLA 9: USUARIOS Y ROLES (RBAC)        -->
+      <!-- ========================================== -->
+      <section id="view-usuarios" class="hidden space-y-4">
+        <div class="flex justify-between items-center">
+          <div>
+            <h2 class="text-base font-bold text-slate-900">Gestión de Usuarios y Roles (RBAC)</h2>
+            <p class="text-xs text-slate-500">Administración de credenciales, perfiles organizacionales y permisos por módulo</p>
+          </div>
+          <button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition">
+            <i data-lucide="user-plus" class="w-4 h-4"></i>
+            <span>Nuevo Colaborador</span>
+          </button>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-600 border-b border-slate-200 uppercase font-semibold text-[10px]">
+              <tr>
+                <th class="p-3">Colaborador</th>
+                <th class="p-3">Correo Institucional</th>
+                <th class="p-3">Rol Asignado</th>
+                <th class="p-3">Estado</th>
+                <th class="p-3">Permiso Reportes (Proxy)</th>
+                <th class="p-3 text-right">Acciones</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-100">
+              <tr>
+                <td class="p-3 font-semibold text-slate-900 flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-[10px]">EO</div>
+                  <span>Estefanía Orellana</span>
+                </td>
+                <td class="p-3 text-slate-600">estefania.orellana@techsolutions.pe</td>
+                <td class="p-3"><span class="bg-purple-100 text-purple-800 font-bold px-2 py-0.5 rounded text-[10px]">Gerente General</span></td>
+                <td class="p-3"><span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">Activo</span></td>
+                <td class="p-3 text-emerald-600 font-bold">Autorizado Total</td>
+                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold">Editar</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-900 flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-slate-100 text-slate-700 font-bold flex items-center justify-center text-[10px]">FC</div>
+                  <span>Fabiola Cadillo</span>
+                </td>
+                <td class="p-3 text-slate-600">fabiola.cadillo@techsolutions.pe</td>
+                <td class="p-3"><span class="bg-blue-100 text-blue-800 font-bold px-2 py-0.5 rounded text-[10px]">Administrador TI</span></td>
+                <td class="p-3"><span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">Activo</span></td>
+                <td class="p-3 text-slate-500 font-bold">Configuración Técnica</td>
+                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold">Editar</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-900 flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-indigo-100 text-indigo-700 font-bold flex items-center justify-center text-[10px]">CM</div>
+                  <span>Carlos Mendoza</span>
+                </td>
+                <td class="p-3 text-slate-600">contabilidad@techsolutions.pe</td>
+                <td class="p-3"><span class="bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded text-[10px]">Contador</span></td>
+                <td class="p-3"><span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">Activo</span></td>
+                <td class="p-3 text-emerald-600 font-bold">Autorizado Total</td>
+                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold">Editar</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-900 flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-amber-100 text-amber-700 font-bold flex items-center justify-center text-[10px]">LV</div>
+                  <span>Luis Valdivia</span>
+                </td>
+                <td class="p-3 text-slate-600">compras@techsolutions.pe</td>
+                <td class="p-3"><span class="bg-amber-100 text-amber-800 font-bold px-2 py-0.5 rounded text-[10px]">Personal Compras</span></td>
+                <td class="p-3"><span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">Activo</span></td>
+                <td class="p-3 text-rose-600 font-bold">Denegado por Proxy</td>
+                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold">Editar</td>
+              </tr>
+              <tr>
+                <td class="p-3 font-semibold text-slate-900 flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-emerald-100 text-emerald-700 font-bold flex items-center justify-center text-[10px]">AR</div>
+                  <span>Ana Romero</span>
+                </td>
+                <td class="p-3 text-slate-600">ventas.caja@techsolutions.pe</td>
+                <td class="p-3"><span class="bg-slate-100 text-slate-800 font-bold px-2 py-0.5 rounded text-[10px]">Vendedor / Caja</span></td>
+                <td class="p-3"><span class="bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded text-[10px]">Activo</span></td>
+                <td class="p-3 text-rose-600 font-bold">Denegado por Proxy</td>
+                <td class="p-3 text-right text-blue-600 hover:underline cursor-pointer font-semibold">Editar</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- PANTALLA 10: HISTORIAL Y DESHACER (MEMENTO)-->
+      <!-- ========================================== -->
+      <section id="view-historial" class="space-y-4 hidden">
+        <div class="bg-slate-900 text-white p-5 rounded-xl border border-slate-800 flex justify-between items-center">
+          <div>
+            <div class="flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1">
+              <i data-lucide="history" class="w-4 h-4"></i>
+              <span>Patrón Memento & Command en Operaciones</span>
+            </div>
+            <h2 class="text-lg font-bold">Historial de Transacciones y Restauración de Estados (RF7, RF8)</h2>
+            <p class="text-xs text-slate-300 mt-0.5">Permite auditar cada comando ejecutado y revertir modificaciones críticas o cancelaciones erróneas sin comprometer la base de datos.</p>
+          </div>
+          <span class="text-xs font-mono bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-3 py-1.5 rounded-lg">Caretaker Activo</span>
+        </div>
+
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+          <div class="p-4 border-b border-slate-200 flex justify-between items-center">
+            <h3 class="text-sm font-bold text-slate-900">Registro Cronológico de Comandos Ejecutados</h3>
+            <span class="text-xs text-slate-500">Pila de Mementos Disponibles</span>
+          </div>
+          <table class="w-full text-left text-xs">
+            <thead class="bg-slate-50 text-slate-600 uppercase font-semibold text-[10px]">
+              <tr>
+                <th class="p-3">ID Log</th>
+                <th class="p-3">Fecha y Hora</th>
+                <th class="p-3">Comando Ejecutado</th>
+                <th class="p-3">Pedido Afectado</th>
+                <th class="p-3">Usuario Responsable</th>
+                <th class="p-3">Estado Previo (Memento)</th>
+                <th class="p-3 text-right">Acción de Rollback</th>
+              </tr>
+            </thead>
+            <tbody id="history-tbody" class="divide-y divide-slate-100">
+              <!-- Renderizado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ========================================== -->
+      <!-- PANTALLA 11: CONFIGURACIÓN GENERAL         -->
+      <!-- ========================================== -->
+      <section id="view-configuracion" class="hidden space-y-5">
+        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+          <h2 class="text-base font-bold text-slate-900 mb-4 pb-2 border-b border-slate-100">Parámetros Generales de la Empresa</h2>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Razón Social</label>
+              <input type="text" value="TechSolutions S.A." class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">RUC</label>
+              <input type="text" value="20608976541" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Moneda del Sistema</label>
+              <input type="text" value="Soles Peruanos (PEN - S/)" readonly class="w-full px-3 py-2 border border-slate-300 rounded-lg bg-slate-50 font-bold text-slate-700">
+            </div>
+            <div>
+              <label class="block font-semibold text-slate-700 mb-1">Tasa de Impuesto General a las Ventas (IGV)</label>
+              <input type="text" value="18%" class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+            </div>
+          </div>
+          <div class="mt-5 flex justify-end">
+            <button class="bg-blue-600 hover:bg-blue-700 text-white font-semibold px-4 py-2 rounded-lg text-xs transition">
+              Guardar Cambios de Configuración
+            </button>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- MODALES DE FLUJO INTERACTIVO                              -->
+  <!-- ========================================================== -->
+  
+  <!-- MODAL: CREAR PEDIDO (COMMAND) -->
+  <div id="modal-create-order" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-lg w-full overflow-hidden border border-slate-200">
+      <div class="bg-slate-900 p-4 text-white flex justify-between items-center">
+        <h3 class="text-sm font-bold flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-blue-400"></i>
+          <span>Nuevo Pedido (CreateOrderCommand)</span>
+        </h3>
+        <button onclick="closeModalCreateOrder()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="p-5 space-y-3 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Nombre o Razón Social del Cliente</label>
+          <input type="text" id="order-customer-input" value="Comercializadora Lima Norte S.A.C." class="w-full px-3 py-2 border border-slate-300 rounded-lg">
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-700 mb-1">Seleccionar Producto</label>
+          <select id="order-product-select" onchange="updateNewOrderSubtotal()" class="w-full px-3 py-2 border border-slate-300 rounded-lg font-medium">
+            <option value="Laptop HP Pavilion 15|2850">Laptop HP Pavilion 15 – S/ 2,850.00</option>
+            <option value="Monitor Curvo Samsung 27|890">Monitor Curvo Samsung 27" – S/ 890.00</option>
+            <option value="Mouse Inalámbrico Logitech|85">Mouse Inalámbrico Logitech – S/ 85.00</option>
+            <option value="Teclado Mecánico RGB Redragon|220">Teclado Mecánico RGB – S/ 220.00</option>
+          </select>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Cantidad</label>
+            <input type="number" id="order-quantity-input" min="1" value="1" onchange="updateNewOrderSubtotal()" class="w-full px-3 py-2 border border-slate-300 rounded-lg font-bold">
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-700 mb-1">Estrategia Activa</label>
+            <input type="text" id="order-strategy-active-display" readonly value="Precio Estándar" class="w-full px-3 py-2 border border-slate-200 bg-slate-50 rounded-lg font-semibold text-blue-700">
+          </div>
+        </div>
+        <div class="p-3 bg-slate-50 border border-slate-200 rounded-lg space-y-1">
+          <div class="flex justify-between text-slate-600">
+            <span>Subtotal:</span>
+            <span id="order-subtotal-display" class="font-semibold">S/ 2,850.00</span>
+          </div>
+          <div class="flex justify-between text-slate-600">
+            <span>Ajuste por Estrategia (Strategy):</span>
+            <span id="order-discount-display" class="font-semibold text-emerald-600">S/ 0.00</span>
+          </div>
+          <div class="flex justify-between text-sm font-bold text-slate-900 pt-1 border-t border-slate-200">
+            <span>Total Final a Pagar:</span>
+            <span id="order-total-display" class="text-blue-600 font-extrabold">S/ 2,850.00</span>
+          </div>
+        </div>
+      </div>
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-2">
+        <button onclick="closeModalCreateOrder()" class="px-3 py-2 text-slate-600 hover:bg-slate-200 rounded-lg text-xs font-semibold">Cancelar</button>
+        <button onclick="submitCreateOrder()" class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow">
+          <i data-lucide="check" class="w-4 h-4"></i>
+          <span>Registrar Pedido (Command)</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: PROCESAR PAGO (ADAPTER) -->
+  <div id="modal-process-payment" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div class="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200">
+      <div class="bg-gradient-to-r from-teal-800 to-slate-900 p-4 text-white flex justify-between items-center">
+        <h3 class="text-sm font-bold flex items-center gap-2">
+          <i data-lucide="credit-card" class="w-4 h-4 text-teal-400"></i>
+          <span>Procesar Pago (Patrón Adapter)</span>
+        </h3>
+        <button onclick="closeModalPayment()" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+      <div class="p-5 space-y-4 text-xs">
+        <div class="p-3 bg-teal-50 border border-teal-200 rounded-lg">
+          <p class="text-teal-900">Pedido: <strong id="modal-payment-order-id">ORD-2026-001</strong></p>
+          <p class="text-teal-900 text-sm font-bold mt-0.5">Total a Cobrar: <span id="modal-payment-amount">S/ 2,850.00</span></p>
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-700 mb-2">Selecciona la Pasarela de Pago:</label>
+          <div class="space-y-2" id="payment-gateways-list">
+            <label class="flex items-center gap-3 p-3 border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+              <input type="radio" name="selected-gateway" value="Yape" checked class="text-purple-600">
+              <span class="w-8 h-8 rounded-lg bg-purple-600 text-white font-bold flex items-center justify-center text-[10px]">Yape</span>
+              <div>
+                <strong class="text-slate-800">Yape (QR / Teléfono BCP)</strong>
+                <p class="text-[11px] text-slate-500">Genera código dinámico OTP al 987-654-321</p>
+              </div>
+            </label>
+            <label class="flex items-center gap-3 p-3 border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+              <input type="radio" name="selected-gateway" value="Plin" class="text-sky-500">
+              <span class="w-8 h-8 rounded-lg bg-sky-500 text-white font-bold flex items-center justify-center text-[10px]">Plin</span>
+              <div>
+                <strong class="text-slate-800">Plin Interbancario</strong>
+                <p class="text-[11px] text-slate-500">Transferencia móvil inmediata sin costo</p>
+              </div>
+            </label>
+            <label class="flex items-center gap-3 p-3 border border-slate-300 rounded-xl cursor-pointer hover:bg-slate-50 transition">
+              <input type="radio" name="selected-gateway" value="PayPal" class="text-blue-700">
+              <span class="w-8 h-8 rounded-lg bg-blue-700 text-white font-bold flex items-center justify-center text-[10px]">PayPal</span>
+              <div>
+                <strong class="text-slate-800">PayPal Express</strong>
+                <p class="text-[11px] text-slate-500">Tarjeta de débito/crédito internacional</p>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <div id="payment-processing-animation" class="hidden p-3 bg-blue-50 border border-blue-200 rounded-lg text-center text-blue-700">
+          <i data-lucide="loader" class="w-5 h-5 animate-spin mx-auto mb-1"></i>
+          <span>Invocando método <code class="font-mono font-bold">adapter.processPayment()</code>...</span>
+        </div>
+      </div>
+      <div class="p-4 bg-slate-50 border-t border-slate-200 flex justify-end gap-2">
+        <button onclick="closeModalPayment()" class="px-3 py-2 text-slate-600 hover:bg-slate-200 rounded-lg text-xs font-semibold">Cancelar</button>
+        <button onclick="executeAdapterPayment()" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-semibold flex items-center gap-1.5 shadow">
+          <i data-lucide="shield-check" class="w-4 h-4"></i>
+          <span>Confirmar y Cobrar</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================================================== -->
+  <!-- JAVASCRIPT DE CONTROL Y PATRONES                          -->
+  <!-- ========================================================== -->
+  <script>
+    // ESTADO GLOBAL DE LA APLICACIÓN
+    const AppState = {
+      currentUser: {
+        name: "Estefanía Orellana",
+        email: "gerencia@techsolutions.pe",
+        role: "Gerente", // Gerente, Contador, Administrador, Compras, Vendedor
+      },
+      currentStrategy: "ESTANDAR", // ESTANDAR, DESCUENTO (-15%), DINAMICO (+10%)
+      gateways: {
+        Yape: true,
+        Plin: true,
+        PayPal: true
+      },
+      products: [
+        { id: 1, sku: "TECH-001", name: "Laptop HP Pavilion 15", category: "Tecnología", basePrice: 2850.00, stock: 2, minStock: 5 },
+        { id: 2, sku: "TECH-002", name: "Monitor Curvo Samsung 27\"", category: "Tecnología", basePrice: 890.00, stock: 12, minStock: 4 },
+        { id: 3, sku: "ACC-001", name: "Mouse Inalámbrico Logitech", category: "Accesorios", basePrice: 85.00, stock: 4, minStock: 10 },
+        { id: 4, sku: "ACC-002", name: "Teclado Mecánico RGB Redragon", category: "Accesorios", basePrice: 220.00, stock: 18, minStock: 6 },
+        { id: 5, sku: "AUD-001", name: "Auriculares HyperX Cloud II", category: "Audio", basePrice: 380.00, stock: 7, minStock: 5 },
+        { id: 6, sku: "OFI-001", name: "Silla Ergonómica Ejecutiva", category: "Oficina", basePrice: 650.00, stock: 9, minStock: 3 },
+      ],
+      orders: [
+        { id: "ORD-2026-001", customer: "Inversiones San Isidro S.A.C.", date: "18/11/2026 14:20", items: "1x Laptop HP Pavilion 15", subtotal: 2850.00, discount: 0.00, total: 2850.00, status: "PROCESADO", gateway: "Yape" },
+        { id: "ORD-2026-002", customer: "Distribuidora Los Olivos E.I.R.L.", date: "18/11/2026 15:45", items: "2x Monitor Curvo Samsung", subtotal: 1780.00, discount: 0.00, total: 1780.00, status: "PAGADO", gateway: "Plin" },
+        { id: "ORD-2026-003", customer: "Consultoría Miraflores S.A.", date: "18/11/2026 16:10", items: "4x Mouse Inalámbrico Logitech", subtotal: 340.00, discount: 0.00, total: 340.00, status: "PENDIENTE", gateway: "PayPal" },
+      ],
+      // PILA DE MEMENTOS (Para Reversión / Undo)
+      mementos: [],
+      // HISTORIAL DE COMANDOS (Command History)
+      commandHistory: [
+        { id: "CMD-101", timestamp: "18/11/2026 14:20", command: "CreateOrderCommand", target: "ORD-2026-001", user: "Ana Romero (Vendedor)", previousState: "N/A (Nueva)", mementoIndex: -1 },
+        { id: "CMD-102", timestamp: "18/11/2026 15:45", command: "ProcessPaymentOrderCommand", target: "ORD-2026-002", user: "Ana Romero (Vendedor)", previousState: "PENDIENTE", mementoIndex: -1 },
+      ],
+      // OBSERVER: Observadores suscritos
+      observers: ["Gerente", "Compras"]
+    };
+
+    // INICIALIZACIÓN
+    document.addEventListener("DOMContentLoaded", () => {
+      lucide.createIcons();
+      initChart();
+      renderAll();
+    });
+
+    function renderAll() {
+      renderProductsTable();
+      renderInventoryTable();
+      renderOrdersTable();
+      renderRecentOrders();
+      renderPricingSimulation();
+      renderHistoryTable();
+      updateObserverAlerts();
+      updateUserInterfaceByRole();
+      lucide.createIcons();
+    }
+
+    // NAVEGACIÓN ENTRE PANTALLAS (SPA)
+    function switchScreen(screenId) {
+      const screens = ['dashboard', 'productos', 'inventario', 'pedidos', 'pagos', 'precios', 'reportes', 'usuarios', 'historial', 'configuracion'];
+      screens.forEach(s => {
+        const view = document.getElementById(`view-${s}`);
+        const nav = document.getElementById(`nav-${s}`);
+        if (view) view.classList.add('hidden');
+        if (nav) nav.classList.remove('tab-active');
+      });
+
+      const activeView = document.getElementById(`view-${screenId}`);
+      const activeNav = document.getElementById(`nav-${screenId}`);
+      if (activeView) activeView.classList.remove('hidden');
+      if (activeNav) activeNav.classList.add('tab-active');
+
+      const titleMap = {
+        dashboard: "Dashboard General",
+        productos: "Catálogo de Productos (Patrón Iterator)",
+        inventario: "Inventario y Alertas (Patrón Observer)",
+        pedidos: "Gestión de Pedidos (Patrón Command & Memento)",
+        pagos: "Pasarelas de Pago (Patrón Adapter)",
+        precios: "Estrategias de Precios (Patrón Strategy)",
+        reportes: "Reportes Financieros (Patrón Proxy)",
+        usuarios: "Directorio de Usuarios y Roles (RBAC)",
+        historial: "Historial de Comandos & Rollback (Memento)",
+        configuracion: "Configuración General del Sistema"
+      };
+
+      document.getElementById('topbar-title').innerText = titleMap[screenId] || "TechSolutions";
+
+      // Manejo específico del Proxy en Reportes
+      if (screenId === 'reportes') {
+        checkProxyAccess();
+      }
+
+      lucide.createIcons();
+    }
+
+    // LOGIN & ROLES (RBAC)
+    function handleLogin() {
+      const selectedRole = document.getElementById('login-role-selector').value;
+      const email = document.getElementById('login-email').value;
+      
+      const roleNameMap = {
+        Gerente: "Estefanía Orellana",
+        Contador: "Carlos Mendoza",
+        Administrador: "Fabiola Cadillo",
+        Compras: "Luis Valdivia",
+        Vendedor: "Ana Romero"
+      };
+
+      AppState.currentUser = {
+        name: roleNameMap[selectedRole] || "Usuario",
+        email: email,
+        role: selectedRole
+      };
+
+      document.getElementById('screen-login').classList.add('hidden');
+      updateUserInterfaceByRole();
+      switchScreen('dashboard');
+    }
+
+    function openLoginModal() {
+      document.getElementById('screen-login').classList.remove('hidden');
+    }
+
+    function setSimulatedRole(newRole) {
+      document.getElementById('login-role-selector').value = newRole;
+      handleLogin();
+      switchScreen('reportes');
+    }
+
+    function updateUserInterfaceByRole() {
+      const u = AppState.currentUser;
+      document.getElementById('sidebar-user-name').innerText = u.name;
+      document.getElementById('sidebar-user-role').innerText = u.role;
+      document.getElementById('topbar-user-name').innerText = u.name;
+      document.getElementById('topbar-user-role').innerText = u.role;
+      
+      const initials = u.name.split(' ').map(n => n[0]).join('').slice(0, 2);
+      document.getElementById('sidebar-user-avatar').innerText = initials;
+    }
+
+    // PROXY PATTERN IMPLEMENTATION (RF3, RF4)
+    function checkProxyAccess() {
+      const user = AppState.currentUser;
+      const deniedBox = document.getElementById('proxy-access-denied');
+      const grantedBox = document.getElementById('proxy-access-granted');
+      const deniedRoleLabel = document.getElementById('denied-current-role');
+
+      // Solo Gerente o Contador tienen acceso a reportes completos
+      if (user.role === 'Gerente' || user.role === 'Contador') {
+        deniedBox.classList.add('hidden');
+        grantedBox.classList.remove('hidden');
+      } else {
+        deniedBox.classList.remove('hidden');
+        grantedBox.classList.add('hidden');
+        deniedRoleLabel.innerText = `${user.role} (${user.name})`;
+      }
+    }
+
+    function refreshReportCache() {
+      const badge = document.getElementById('proxy-cache-badge');
+      badge.innerText = "Recalculando desde RealFinancialReportService...";
+      badge.classList.remove('bg-blue-100', 'text-blue-800');
+      badge.classList.add('bg-amber-100', 'text-amber-800');
+      setTimeout(() => {
+        badge.innerText = "Caché Proxy: ACTUALIZADA (300s TTL)";
+        badge.classList.remove('bg-amber-100', 'text-amber-800');
+        badge.classList.add('bg-blue-100', 'text-blue-800');
+      }, 700);
+    }
+
+    // STRATEGY PATTERN IMPLEMENTATION (RF9, RF10)
+    function selectPricingStrategy(strategyType) {
+      AppState.currentStrategy = strategyType;
+
+      // Actualizar tarjetas de interfaz
+      ['estandar', 'descuento', 'dinamico'].forEach(st => {
+        const card = document.getElementById(`card-strat-${st}`);
+        const badge = document.getElementById(`badge-strat-${st}`);
+        if (st === strategyType.toLowerCase()) {
+          card.classList.add('border-blue-600', 'bg-blue-50/40');
+          card.classList.remove('border-slate-200', 'bg-white');
+          badge.classList.remove('hidden');
+        } else {
+          card.classList.remove('border-blue-600', 'bg-blue-50/40');
+          card.classList.add('border-slate-200', 'bg-white');
+          badge.classList.add('hidden');
+        }
+      });
+
+      const labelMap = {
+        ESTANDAR: "Precio Estándar",
+        DESCUENTO: "Descuento Porcentual (15%)",
+        DINAMICO: "Precio Dinámico (+10%)"
+      };
+
+      document.getElementById('strategy-current-label').innerText = labelMap[strategyType];
+      document.getElementById('topbar-strategy-name').innerText = labelMap[strategyType];
+
+      // Recalcular productos y simulación
+      renderProductsTable();
+      renderPricingSimulation();
+    }
+
+    function calculateFinalPrice(basePrice) {
+      switch (AppState.currentStrategy) {
+        case 'DESCUENTO':
+          return basePrice * 0.85;
+        case 'DINAMICO':
+          return basePrice * 1.10;
+        case 'ESTANDAR':
+        default:
+          return basePrice;
+      }
+    }
+
+    // ITERATOR PATTERN IMPLEMENTATION (RF11, RF12)
+    function filterProducts() {
+      const search = document.getElementById('product-search-input').value.toLowerCase();
+      const cat = document.getElementById('product-category-filter').value;
+
+      const filtered = AppState.products.filter(p => {
+        const matchesSearch = p.name.toLowerCase().includes(search) || p.sku.toLowerCase().includes(search);
+        const matchesCat = cat === 'ALL' || p.category === cat;
+        return matchesSearch && matchesCat;
+      });
+
+      renderProductsTable(filtered);
+    }
+
+    function renderProductsTable(customList = null) {
+      const list = customList || AppState.products;
+      const tbody = document.getElementById('products-tbody');
+      tbody.innerHTML = '';
+
+      list.forEach(p => {
+        const strategicPrice = calculateFinalPrice(p.basePrice);
+        const isLow = p.stock <= p.minStock;
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="p-3 font-mono font-bold text-slate-700">${p.sku}</td>
+          <td class="p-3 font-semibold text-slate-900">${p.name}</td>
+          <td class="p-3 text-slate-500">${p.category}</td>
+          <td class="p-3 text-slate-500">S/ ${p.basePrice.toFixed(2)}</td>
+          <td class="p-3 font-bold text-blue-700">S/ ${strategicPrice.toFixed(2)}</td>
+          <td class="p-3 font-bold ${isLow ? 'text-rose-600' : 'text-slate-800'}">${p.stock} unid.</td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isLow ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-800'}">
+              ${isLow ? 'Stock Bajo (Alerta)' : 'En Existencia'}
+            </span>
+          </td>
+          <td class="p-3 text-right">
+            <button onclick="openModalCreateOrderWithProduct('${p.name}', ${p.basePrice})" class="text-xs bg-blue-50 text-blue-700 hover:bg-blue-100 px-2 py-1 rounded font-semibold transition">
+              Pedir
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('products-count-text').innerText = `Mostrando ${list.length} de ${AppState.products.length} productos`;
+    }
+
+    // OBSERVER PATTERN IMPLEMENTATION (RF5, RF6)
+    function renderInventoryTable() {
+      const tbody = document.getElementById('inventory-tbody');
+      tbody.innerHTML = '';
+
+      AppState.products.forEach(p => {
+        const isCritical = p.stock <= p.minStock;
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="p-3 font-semibold text-slate-900">${p.name} <span class="text-[10px] font-mono text-slate-400">(${p.sku})</span></td>
+          <td class="p-3 font-bold ${isCritical ? 'text-rose-600' : 'text-slate-800'}">${p.stock} unidades</td>
+          <td class="p-3">
+            <input type="number" min="1" id="min-stock-${p.id}" value="${p.minStock}" class="w-20 px-2 py-1 border border-slate-300 rounded font-semibold text-center text-xs">
+          </td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${isCritical ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-700'}">
+              ${isCritical ? '⚠️ ALERTA ACTIVADA' : 'Normal'}
+            </span>
+          </td>
+          <td class="p-3 text-[11px] text-slate-600">
+            Gerente & Compras (${isCritical ? '<strong class="text-rose-600">Notificados</strong>' : 'En escucha'})
+          </td>
+          <td class="p-3 text-right">
+            <button onclick="saveMinStock(${p.id})" class="text-xs bg-slate-900 hover:bg-slate-800 text-white px-2.5 py-1 rounded font-semibold transition">
+              Guardar
+            </button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function saveMinStock(productId) {
+      const input = document.getElementById(`min-stock-${productId}`);
+      const newMin = parseInt(input.value);
+      const prod = AppState.products.find(p => p.id === productId);
+      if (prod && newMin > 0) {
+        prod.minStock = newMin;
+        alert(`Umbral de stock mínimo actualizado para ${prod.name} a ${newMin} unidades.`);
+        renderInventoryTable();
+        renderProductsTable();
+        updateObserverAlerts();
+      }
+    }
+
+    function triggerSimulatedSale() {
+      // Descuenta stock de Laptop HP Pavilion 15
+      const p = AppState.products[0];
+      if (p.stock > 0) {
+        p.stock -= 1;
+        alert(`Venta simulada completada. Stock de ${p.name} redujo a ${p.stock}. Notificación Observer disparada a Gerente y Compras.`);
+        renderAll();
+      }
+    }
+
+    function updateObserverAlerts() {
+      const lowStockProducts = AppState.products.filter(p => p.stock <= p.minStock);
+      const badge = document.getElementById('alerts-badge');
+      const countText = document.getElementById('alerts-count-text');
+      const alertsList = document.getElementById('alerts-list');
+      const kpiStock = document.getElementById('kpi-stock-bajo');
+
+      if (kpiStock) kpiStock.innerText = `${lowStockProducts.length} Productos`;
+
+      if (lowStockProducts.length > 0) {
+        badge.classList.remove('hidden');
+        countText.innerText = `${lowStockProducts.length} Críticas`;
+      } else {
+        badge.classList.add('hidden');
+        countText.innerText = `0 Críticas`;
+      }
+
+      alertsList.innerHTML = '';
+      lowStockProducts.forEach(p => {
+        const item = document.createElement('div');
+        item.className = "p-2.5 bg-rose-50 border border-rose-200 rounded-lg";
+        item.innerHTML = `
+          <div class="flex justify-between items-start">
+            <strong class="text-rose-800 font-semibold">${p.name}</strong>
+            <span class="text-[10px] text-rose-600 font-bold">Stock: ${p.stock} (Mín: ${p.minStock})</span>
+          </div>
+          <p class="text-rose-700 text-[11px] mt-0.5">Notificación Observer enviada a Gerente y Compras.</p>
+        `;
+        alertsList.appendChild(item);
+      });
+    }
+
+    function toggleAlertsDropdown() {
+      document.getElementById('alerts-dropdown').classList.toggle('hidden');
+    }
+
+    // COMMAND & MEMENTO IMPLEMENTATION (RF7, RF8)
+    function renderOrdersTable() {
+      const tbody = document.getElementById('orders-tbody');
+      tbody.innerHTML = '';
+
+      AppState.orders.forEach(o => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="p-3 font-mono font-bold text-blue-700">${o.id}</td>
+          <td class="p-3 font-semibold text-slate-800">${o.customer}</td>
+          <td class="p-3 text-slate-500">${o.date}</td>
+          <td class="p-3">S/ ${o.subtotal.toFixed(2)}</td>
+          <td class="p-3 text-emerald-600 font-semibold">S/ ${o.discount.toFixed(2)}</td>
+          <td class="p-3 font-bold text-slate-900">S/ ${o.total.toFixed(2)}</td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${
+              o.status === 'PAGADO' ? 'bg-emerald-100 text-emerald-800' :
+              o.status === 'PROCESADO' ? 'bg-blue-100 text-blue-800' :
+              o.status === 'CANCELADO' ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800'
+            }">
+              ${o.status}
+            </span>
+          </td>
+          <td class="p-3 text-right space-x-1">
+            ${o.status !== 'CANCELADO' && o.status !== 'PAGADO' ? `
+              <button onclick="openModalPaymentForOrder('${o.id}', ${o.total})" class="px-2 py-1 bg-emerald-50 text-emerald-700 font-semibold rounded hover:bg-emerald-100 text-xs">
+                Pagar
+              </button>
+              <button onclick="executeCancelOrderCommand('${o.id}')" class="px-2 py-1 bg-rose-50 text-rose-700 font-semibold rounded hover:bg-rose-100 text-xs">
+                Cancelar
+              </button>
+            ` : `
+              <span class="text-[11px] text-slate-400 italic">Comando Ejecutado</span>
+            `}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function renderRecentOrders() {
+      const tbody = document.getElementById('recent-orders-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      AppState.orders.slice(0, 3).forEach(o => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td class="p-3 font-mono font-bold text-slate-800">${o.id}</td>
+          <td class="p-3 font-semibold text-slate-800">${o.customer}</td>
+          <td class="p-3 font-bold text-slate-900">S/ ${o.total.toFixed(2)}</td>
+          <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-slate-100 text-slate-700">${o.gateway}</span></td>
+          <td class="p-3">
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold ${o.status === 'PAGADO' ? 'bg-emerald-100 text-emerald-800' : 'bg-blue-100 text-blue-800'}">
+              ${o.status}
+            </span>
+          </td>
+          <td class="p-3 text-right">
+            <button onclick="switchScreen('pedidos')" class="text-blue-600 hover:underline font-semibold">Detalles</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // MEMENTO: CREAR SNAPSHOT Y CANCELAR PEDIDO
+    function executeCancelOrderCommand(orderId) {
+      const order = AppState.orders.find(o => o.id === orderId);
+      if (!order) return;
+
+      // 1. Guardar Snapshot (Memento)
+      const memento = JSON.parse(JSON.stringify(order));
+      const mementoIndex = AppState.mementos.length;
+      AppState.mementos.push(memento);
+
+      // 2. Ejecutar Comando CancelOrderCommand
+      const previousState = order.status;
+      order.status = "CANCELADO";
+
+      // 3. Registrar en Command History
+      const cmdId = `CMD-${100 + AppState.commandHistory.length + 1}`;
+      AppState.commandHistory.unshift({
+        id: cmdId,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        command: "CancelOrderCommand",
+        target: orderId,
+        user: `${AppState.currentUser.name} (${AppState.currentUser.role})`,
+        previousState: previousState,
+        mementoIndex: mementoIndex
+      });
+
+      alert(`Comando CancelOrderCommand ejecutado sobre ${orderId}. Memento guardado con éxito. Ahora puedes restaurarlo desde la pantalla 'Historial & Deshacer'.`);
+      renderAll();
+    }
+
+    // MEMENTO: RESTAURAR ESTADO (UNDO / ROLLBACK)
+    function restoreMemento(mementoIndex, cmdId) {
+      const memento = AppState.mementos[mementoIndex];
+      if (!memento) return;
+
+      const orderIndex = AppState.orders.findIndex(o => o.id === memento.id);
+      if (orderIndex !== -1) {
+        AppState.orders[orderIndex] = JSON.parse(JSON.stringify(memento));
+
+        // Registrar acción de restauración en historial
+        AppState.commandHistory.unshift({
+          id: `CMD-${100 + AppState.commandHistory.length + 1}`,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+          command: "RestoreMementoCommand",
+          target: memento.id,
+          user: `${AppState.currentUser.name} (${AppState.currentUser.role})`,
+          previousState: "CANCELADO",
+          mementoIndex: -1
+        });
+
+        alert(`¡Patrón Memento en Acción! El pedido ${memento.id} fue restaurado exitosamente a su estado anterior (${memento.status}).`);
+        renderAll();
+      }
+    }
+
+    function renderHistoryTable() {
+      const tbody = document.getElementById('history-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      AppState.commandHistory.forEach(c => {
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50 transition";
+        tr.innerHTML = `
+          <td class="p-3 font-mono font-bold text-slate-600">${c.id}</td>
+          <td class="p-3 text-slate-500">${c.timestamp}</td>
+          <td class="p-3 font-bold text-indigo-700">${c.command}</td>
+          <td class="p-3 font-mono font-semibold text-blue-700">${c.target}</td>
+          <td class="p-3 text-slate-700">${c.user}</td>
+          <td class="p-3"><span class="px-2 py-0.5 bg-slate-100 rounded text-[10px] font-bold">${c.previousState}</span></td>
+          <td class="p-3 text-right">
+            ${c.mementoIndex !== -1 ? `
+              <button onclick="restoreMemento(${c.mementoIndex}, '${c.id}')" class="px-2.5 py-1 bg-cyan-600 hover:bg-cyan-700 text-white font-bold rounded text-xs transition flex items-center gap-1 ml-auto">
+                <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                <span>Deshacer (Memento)</span>
+              </button>
+            ` : `
+              <span class="text-[11px] text-slate-400 italic">No reversible</span>
+            `}
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // MODAL NUEVO PEDIDO
+    function openModalCreateOrder() {
+      document.getElementById('modal-create-order').classList.remove('hidden');
+      updateNewOrderSubtotal();
+    }
+
+    function openModalCreateOrderWithProduct(prodName, price) {
+      openModalCreateOrder();
+      // Seleccionar producto coincidente
+      const sel = document.getElementById('order-product-select');
+      for (let i = 0; i < sel.options.length; i++) {
+        if (sel.options[i].text.includes(prodName)) {
+          sel.selectedIndex = i;
+          break;
+        }
+      }
+      updateNewOrderSubtotal();
+    }
+
+    function closeModalCreateOrder() {
+      document.getElementById('modal-create-order').classList.add('hidden');
+    }
+
+    function updateNewOrderSubtotal() {
+      const prodVal = document.getElementById('order-product-select').value;
+      const [pName, pPrice] = prodVal.split('|');
+      const qty = parseInt(document.getElementById('order-quantity-input').value) || 1;
+      const baseSubtotal = parseFloat(pPrice) * qty;
+
+      let strategicTotal = baseSubtotal;
+      let discountAmount = 0.00;
+
+      if (AppState.currentStrategy === 'DESCUENTO') {
+        strategicTotal = baseSubtotal * 0.85;
+        discountAmount = baseSubtotal * 0.15;
+      } else if (AppState.currentStrategy === 'DINAMICO') {
+        strategicTotal = baseSubtotal * 1.10;
+        discountAmount = - (baseSubtotal * 0.10); // Recargo
+      }
+
+      document.getElementById('order-strategy-active-display').value = document.getElementById('topbar-strategy-name').innerText;
+      document.getElementById('order-subtotal-display').innerText = `S/ ${baseSubtotal.toFixed(2)}`;
+      document.getElementById('order-discount-display').innerText = `S/ ${discountAmount.toFixed(2)}`;
+      document.getElementById('order-total-display').innerText = `S/ ${strategicTotal.toFixed(2)}`;
+    }
+
+    function submitCreateOrder() {
+      const customer = document.getElementById('order-customer-input').value;
+      const prodVal = document.getElementById('order-product-select').value;
+      const [pName, pPrice] = prodVal.split('|');
+      const qty = parseInt(document.getElementById('order-quantity-input').value) || 1;
+      const baseSubtotal = parseFloat(pPrice) * qty;
+      const finalTotal = calculateFinalPrice(baseSubtotal);
+
+      const newId = `ORD-2026-00${AppState.orders.length + 1}`;
+      const newOrder = {
+        id: newId,
+        customer: customer,
+        date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        items: `${qty}x ${pName}`,
+        subtotal: baseSubtotal,
+        discount: baseSubtotal - finalTotal,
+        total: finalTotal,
+        status: "PENDIENTE",
+        gateway: "Por cobrar"
+      };
+
+      AppState.orders.unshift(newOrder);
+
+      // Registrar comando
+      AppState.commandHistory.unshift({
+        id: `CMD-${100 + AppState.commandHistory.length + 1}`,
+        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        command: "CreateOrderCommand",
+        target: newId,
+        user: `${AppState.currentUser.name} (${AppState.currentUser.role})`,
+        previousState: "N/A",
+        mementoIndex: -1
+      });
+
+      closeModalCreateOrder();
+      alert(`Pedido ${newId} creado exitosamente mediante CreateOrderCommand.`);
+      renderAll();
+    }
+
+    // ADAPTER PATTERN IMPLEMENTATION (RF1, RF2)
+    function toggleGateway(gwName) {
+      const isEnabled = document.getElementById(`gateway-${gwName.toLowerCase()}-toggle`).checked;
+      AppState.gateways[gwName] = isEnabled;
+      alert(`Pasarela ${gwName} ahora está: ${isEnabled ? 'HABILITADA' : 'DESHABILITADA'}.`);
+    }
+
+    let activePaymentOrderId = null;
+    let activePaymentAmount = 0;
+
+    function openModalPaymentForOrder(orderId, amount) {
+      activePaymentOrderId = orderId;
+      activePaymentAmount = amount;
+
+      document.getElementById('modal-payment-order-id').innerText = orderId;
+      document.getElementById('modal-payment-amount').innerText = `S/ ${amount.toFixed(2)}`;
+      document.getElementById('modal-process-payment').classList.remove('hidden');
+    }
+
+    function closeModalPayment() {
+      document.getElementById('modal-process-payment').classList.add('hidden');
+      document.getElementById('payment-processing-animation').classList.add('hidden');
+    }
+
+    function executeAdapterPayment() {
+      const selectedRadio = document.querySelector('input[name="selected-gateway"]:checked');
+      const gw = selectedRadio ? selectedRadio.value : 'Yape';
+
+      if (!AppState.gateways[gw]) {
+        alert(`Error: La pasarela ${gw} está deshabilitada por el administrador en la configuración.`);
+        return;
+      }
+
+      document.getElementById('payment-processing-animation').classList.remove('hidden');
+
+      setTimeout(() => {
+        const order = AppState.orders.find(o => o.id === activePaymentOrderId);
+        if (order) {
+          order.status = "PAGADO";
+          order.gateway = gw;
+
+          AppState.commandHistory.unshift({
+            id: `CMD-${100 + AppState.commandHistory.length + 1}`,
+            timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+            command: "ProcessPaymentCommand",
+            target: order.id,
+            user: `${AppState.currentUser.name} (${AppState.currentUser.role})`,
+            previousState: "PENDIENTE",
+            mementoIndex: -1
+          });
+        }
+
+        closeModalPayment();
+        alert(`¡Pago exitoso mediante ${gw}PaymentAdapter! El pedido ${activePaymentOrderId} ha sido marcado como PAGADO.`);
+        renderAll();
+      }, 900);
+    }
+
+    function processSimulatedPayment() {
+      const amount = parseFloat(document.getElementById('sim-payment-amount').value);
+      const gw = document.getElementById('sim-payment-gateway').value;
+      const resBox = document.getElementById('payment-result-box');
+
+      if (!AppState.gateways[gw]) {
+        resBox.className = "mt-4 p-4 rounded-lg text-xs bg-rose-50 border border-rose-200 text-rose-800 block";
+        resBox.innerHTML = `<strong>Error Adapter:</strong> La pasarela ${gw} se encuentra inactiva. Habilítala desde el panel de control.`;
+        return;
+      }
+
+      resBox.className = "mt-4 p-4 rounded-lg text-xs bg-emerald-50 border border-emerald-200 text-emerald-800 block";
+      resBox.innerHTML = `
+        <div class="flex items-center gap-2 font-bold mb-1">
+          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
+          <span>Respuesta Exitosa de ${gw}Adapter</span>
+        </div>
+        <p>Monto Transaccionado: <strong>S/ ${amount.toFixed(2)}</strong></p>
+        <p class="font-mono text-[11px] text-emerald-700 mt-1">Transacción ID: TXN-${Math.floor(Math.random() * 900000 + 100000)} | Estado: APPROVED</p>
+      `;
+      lucide.createIcons();
+    }
+
+    // SIMULACIÓN DE PRICING STRATEGY
+    function renderPricingSimulation() {
+      const tbody = document.getElementById('pricing-sim-tbody');
+      if (!tbody) return;
+      tbody.innerHTML = '';
+
+      AppState.products.slice(0, 4).forEach(p => {
+        const estandar = p.basePrice;
+        const desc = p.basePrice * 0.85;
+        const din = p.basePrice * 1.10;
+        const vigente = calculateFinalPrice(p.basePrice);
+
+        const tr = document.createElement('tr');
+        tr.className = "hover:bg-slate-50";
+        tr.innerHTML = `
+          <td class="p-3 font-semibold text-slate-800">${p.name}</td>
+          <td class="p-3 text-slate-500">S/ ${p.basePrice.toFixed(2)}</td>
+          <td class="p-3 ${AppState.currentStrategy === 'ESTANDAR' ? 'font-bold text-blue-700' : 'text-slate-600'}">S/ ${estandar.toFixed(2)}</td>
+          <td class="p-3 ${AppState.currentStrategy === 'DESCUENTO' ? 'font-bold text-emerald-700' : 'text-slate-600'}">S/ ${desc.toFixed(2)}</td>
+          <td class="p-3 ${AppState.currentStrategy === 'DINAMICO' ? 'font-bold text-purple-700' : 'text-slate-600'}">S/ ${din.toFixed(2)}</td>
+          <td class="p-3 text-right font-extrabold text-blue-700">S/ ${vigente.toFixed(2)}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    // CHART.JS INICIALIZACIÓN
+    function initChart() {
+      const ctx = document.getElementById('dashboardChart');
+      if (!ctx) return;
+      new Chart(ctx, {
+        type: 'line',
+        data: {
+          labels: ['Lun 12', 'Mar 13', 'Mié 14', 'Jue 15', 'Vie 16', 'Sáb 17', 'Hoy 18'],
+          datasets: [{
+            label: 'Ventas en Soles (S/)',
+            data: [9200, 11400, 8900, 14200, 16800, 19500, 14850],
+            borderColor: '#2563eb',
+            backgroundColor: 'rgba(37, 99, 235, 0.08)',
+            borderWidth: 2.5,
+            fill: true,
+            tension: 0.35,
+            pointBackgroundColor: '#1d4ed8',
+            pointRadius: 4
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false }
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: { color: '#f1f5f9' },
+              ticks: {
+                callback: function(value) { return 'S/ ' + value; },
+                font: { size: 10 }
+              }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { size: 10 } }
+            }
+          }
+        }
+      });
+    }
+  </script>
+</body>
+</html>
