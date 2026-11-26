@@ -584,68 +584,74 @@
           <span class="text-xs bg-teal-500/20 text-teal-300 border border-teal-500/30 px-3 py-1.5 rounded-lg font-mono">Status: Pasarelas Operativas</span>
         </div>
 
-        <!-- Habilitar / Deshabilitar Pasarelas (RF2) -->
+        <!-- Métodos de Pago Disponibles (Informativos y Sincronizados con el Selector) -->
         <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
           <div class="flex justify-between items-center mb-4 pb-2 border-b border-slate-100">
             <div>
-              <h3 class="text-sm font-bold text-slate-900">Panel de Configuración de Pasarelas</h3>
-              <p class="text-xs text-slate-500">El administrador puede habilitar o deshabilitar métodos de pago en tiempo real.</p>
+              <h3 class="text-sm font-bold text-slate-900">Métodos de Pago Disponibles</h3>
+              <p class="text-xs text-slate-500">Pasarelas electrónicas integradas y certificadas para transacciones comerciales en soles y dólares.</p>
             </div>
-            <span class="text-xs font-semibold text-blue-600 bg-blue-50 px-2.5 py-1 rounded-md">Control Exclusivo Admin</span>
+            <span class="text-xs font-semibold text-emerald-600 bg-emerald-50 px-2.5 py-1 rounded-md flex items-center gap-1">
+              <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-600"></i>
+              <span>Pasarelas Certificadas</span>
+            </span>
           </div>
 
           <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Yape Adapter Card -->
-            <div class="p-4 rounded-xl border border-slate-200 hover:border-purple-300 transition bg-gradient-to-b from-white to-purple-50/30">
+            <!-- Yape Card -->
+            <div id="gateway-card-yape" onclick="selectPaymentGatewayCard('Yape')" class="cursor-pointer p-4 rounded-xl border-2 border-purple-600 bg-purple-50/50 shadow-md ring-2 ring-purple-200/60 transition-all duration-200 relative">
               <div class="flex justify-between items-center mb-3">
                 <span class="w-10 h-10 rounded-xl bg-purple-600 text-white font-bold flex items-center justify-center text-xs shadow-md shadow-purple-500/20">
                   Yape
                 </span>
-                <label class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" id="gateway-yape-toggle" checked onchange="toggleGateway('Yape')" class="sr-only peer">
-                  <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-purple-600"></div>
-                </label>
+                <span id="badge-status-yape" class="text-[10px] bg-purple-600 text-white font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                  <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                  <span>Seleccionada</span>
+                </span>
               </div>
               <h4 class="text-sm font-bold text-slate-800">Yape (BCP / Billetera Móvil)</h4>
-              <p class="text-xs text-slate-500 mt-1">Cobros instantáneos mediante código QR y confirmación de número de teléfono.</p>
-              <div class="mt-3 text-[11px] font-mono text-purple-700 bg-purple-100/60 p-1.5 rounded">
-                Clase: YapePaymentAdapter
+              <p class="text-xs text-slate-500 mt-1">Cobros instantáneos mediante código QR y confirmación de número de teléfono móvil.</p>
+              <div class="mt-3 text-[11px] text-purple-800 bg-purple-100/60 p-2 rounded-lg font-medium flex items-center justify-between">
+                <span>Comisión por Cobro: 0%</span>
+                <span class="text-[10px] text-purple-600 font-bold uppercase tracking-wider">Acreditación Inmediata</span>
               </div>
             </div>
 
-            <!-- Plin Adapter Card -->
-            <div class="p-4 rounded-xl border border-slate-200 hover:border-sky-300 transition bg-gradient-to-b from-white to-sky-50/30">
+            <!-- Plin Card -->
+            <div id="gateway-card-plin" onclick="selectPaymentGatewayCard('Plin')" class="cursor-pointer p-4 rounded-xl border border-slate-200 bg-white hover:border-slate-300 transition-all duration-200 relative">
               <div class="flex justify-between items-center mb-3">
                 <span class="w-10 h-10 rounded-xl bg-sky-500 text-white font-bold flex items-center justify-center text-xs shadow-md shadow-sky-500/20">
                   Plin
                 </span>
-                <label class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" id="gateway-plin-toggle" checked onchange="toggleGateway('Plin')" class="sr-only peer">
-                  <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-sky-500"></div>
-                </label>
+                <span id="badge-status-plin" class="hidden text-[10px] bg-sky-600 text-white font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                  <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                  <span>Seleccionada</span>
+                </span>
               </div>
               <h4 class="text-sm font-bold text-slate-800">Plin (BBVA / Interbank / Scotiabank)</h4>
-              <p class="text-xs text-slate-500 mt-1">Transferencias interbancarias inmediatas sin comisiones para el comprador.</p>
-              <div class="mt-3 text-[11px] font-mono text-sky-700 bg-sky-100/60 p-1.5 rounded">
-                Clase: PlinPaymentAdapter
+              <p class="text-xs text-slate-500 mt-1">Transferencias interbancarias inmediatas sin comisiones ni recargos para el cliente.</p>
+              <div class="mt-3 text-[11px] text-sky-800 bg-sky-100/60 p-2 rounded-lg font-medium flex items-center justify-between">
+                <span>Comisión por Cobro: 0%</span>
+                <span class="text-[10px] text-sky-600 font-bold uppercase tracking-wider">Interbancario Rápido</span>
               </div>
             </div>
 
-            <!-- PayPal Adapter Card -->
-            <div class="p-4 rounded-xl border border-slate-200 hover:border-blue-300 transition bg-gradient-to-b from-white to-blue-50/30">
+            <!-- PayPal Card -->
+            <div id="gateway-card-paypal" onclick="selectPaymentGatewayCard('PayPal')" class="cursor-pointer p-4 rounded-xl border border-slate-200 bg-white hover:border-slate-300 transition-all duration-200 relative">
               <div class="flex justify-between items-center mb-3">
                 <span class="w-10 h-10 rounded-xl bg-blue-700 text-white font-bold flex items-center justify-center text-xs shadow-md shadow-blue-600/20">
                   PayPal
                 </span>
-                <label class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" id="gateway-paypal-toggle" checked onchange="toggleGateway('PayPal')" class="sr-only peer">
-                  <div class="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-700"></div>
-                </label>
+                <span id="badge-status-paypal" class="hidden text-[10px] bg-blue-700 text-white font-bold px-2.5 py-0.5 rounded-full flex items-center gap-1 shadow-sm">
+                  <span class="w-1.5 h-1.5 rounded-full bg-white animate-pulse"></span>
+                  <span>Seleccionada</span>
+                </span>
               </div>
               <h4 class="text-sm font-bold text-slate-800">PayPal Express Checkout</h4>
-              <p class="text-xs text-slate-500 mt-1">Transacciones internacionales y tarjetas de crédito mediante token REST.</p>
-              <div class="mt-3 text-[11px] font-mono text-blue-700 bg-blue-100/60 p-1.5 rounded">
-                Clase: PayPalPaymentAdapter
+              <p class="text-xs text-slate-500 mt-1">Transacciones internacionales y cobros con tarjetas de crédito / débito en dólares y soles.</p>
+              <div class="mt-3 text-[11px] text-blue-800 bg-blue-100/60 p-2 rounded-lg font-medium flex items-center justify-between">
+                <span>Tarjetas y Dólares</span>
+                <span class="text-[10px] text-blue-600 font-bold uppercase tracking-wider">Cobertura Global</span>
               </div>
             </div>
           </div>
@@ -661,8 +667,8 @@
             </div>
             <div>
               <label class="block text-xs font-medium text-slate-700 mb-1">Seleccionar Pasarela</label>
-              <select id="sim-payment-gateway" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-semibold">
-                <option value="Yape">Yape (QR / Teléfono)</option>
+              <select id="sim-payment-gateway" onchange="onSimGatewayChange()" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-xs font-semibold focus:ring-2 focus:ring-emerald-500 bg-white">
+                <option value="Yape" selected>Yape (QR / Teléfono BCP)</option>
                 <option value="Plin">Plin (Interbancario)</option>
                 <option value="PayPal">PayPal (Tarjeta / Dólares)</option>
               </select>
@@ -1393,6 +1399,7 @@
       renderHistoryTable();
       updateObserverAlerts();
       updateUserInterfaceByRole();
+      updatePaymentCardsHighlight(document.getElementById('sim-payment-gateway')?.value || 'Yape');
       lucide.createIcons();
     }
 
@@ -2124,11 +2131,60 @@
       renderAll();
     }
 
-    // ADAPTER PATTERN IMPLEMENTATION (RF1, RF2)
-    function toggleGateway(gwName) {
-      const isEnabled = document.getElementById(`gateway-${gwName.toLowerCase()}-toggle`).checked;
-      AppState.gateways[gwName] = isEnabled;
-      alert(`Pasarela ${gwName} ahora está: ${isEnabled ? 'HABILITADA' : 'DESHABILITADA'}.`);
+    // HIGHLIGHT Y SINCRONIZACIÓN DE PASARELAS DE PAGO
+    function updatePaymentCardsHighlight(selectedGw) {
+      const cards = {
+        Yape: {
+          card: document.getElementById('gateway-card-yape'),
+          badge: document.getElementById('badge-status-yape'),
+          activeClasses: ['border-2', 'border-purple-600', 'bg-purple-50/50', 'shadow-md', 'ring-2', 'ring-purple-200/60'],
+          inactiveClasses: ['border', 'border-slate-200', 'bg-white', 'hover:border-slate-300']
+        },
+        Plin: {
+          card: document.getElementById('gateway-card-plin'),
+          badge: document.getElementById('badge-status-plin'),
+          activeClasses: ['border-2', 'border-sky-500', 'bg-sky-50/50', 'shadow-md', 'ring-2', 'ring-sky-200/60'],
+          inactiveClasses: ['border', 'border-slate-200', 'bg-white', 'hover:border-slate-300']
+        },
+        PayPal: {
+          card: document.getElementById('gateway-card-paypal'),
+          badge: document.getElementById('badge-status-paypal'),
+          activeClasses: ['border-2', 'border-blue-600', 'bg-blue-50/50', 'shadow-md', 'ring-2', 'ring-blue-200/60'],
+          inactiveClasses: ['border', 'border-slate-200', 'bg-white', 'hover:border-slate-300']
+        }
+      };
+
+      Object.keys(cards).forEach(gw => {
+        const item = cards[gw];
+        if (!item.card) return;
+        if (gw === selectedGw) {
+          item.card.classList.remove(...item.inactiveClasses);
+          item.card.classList.add(...item.activeClasses);
+          if (item.badge) item.badge.classList.remove('hidden');
+        } else {
+          item.card.classList.remove(...item.activeClasses);
+          item.card.classList.add(...item.inactiveClasses);
+          if (item.badge) item.badge.classList.add('hidden');
+        }
+      });
+
+      // Ocultar cualquier resultado previo al cambiar de pasarela
+      const resBox = document.getElementById('payment-result-box');
+      if (resBox) {
+        resBox.className = "hidden mt-4 p-4 rounded-lg text-xs";
+        resBox.innerHTML = "";
+      }
+    }
+
+    function selectPaymentGatewayCard(gwName) {
+      const sel = document.getElementById('sim-payment-gateway');
+      if (sel) sel.value = gwName;
+      updatePaymentCardsHighlight(gwName);
+    }
+
+    function onSimGatewayChange() {
+      const sel = document.getElementById('sim-payment-gateway');
+      if (sel) updatePaymentCardsHighlight(sel.value);
     }
 
     let activePaymentOrderId = null;
@@ -2177,31 +2233,76 @@
         }
 
         closeModalPayment();
-        alert(`¡Pago exitoso mediante ${gw}PaymentAdapter! El pedido ${activePaymentOrderId} ha sido marcado como PAGADO.`);
+        alert(`¡Pago exitoso mediante ${gw}! El pedido ${activePaymentOrderId} ha sido confirmado y marcado como PAGADO.`);
         renderAll();
       }, 900);
     }
 
     function processSimulatedPayment() {
-      const amount = parseFloat(document.getElementById('sim-payment-amount').value);
+      const amountInput = document.getElementById('sim-payment-amount');
+      const amount = parseFloat(amountInput ? amountInput.value : 350.00);
       const gw = document.getElementById('sim-payment-gateway').value;
       const resBox = document.getElementById('payment-result-box');
 
-      if (!AppState.gateways[gw]) {
-        resBox.className = "mt-4 p-4 rounded-lg text-xs bg-rose-50 border border-rose-200 text-rose-800 block";
-        resBox.innerHTML = `<strong>Error Adapter:</strong> La pasarela ${gw} se encuentra inactiva. Habilítala desde el panel de control.`;
+      if (isNaN(amount) || amount <= 0) {
+        alert("Por favor ingrese un monto de prueba válido.");
         return;
       }
 
-      resBox.className = "mt-4 p-4 rounded-lg text-xs bg-emerald-50 border border-emerald-200 text-emerald-800 block";
-      resBox.innerHTML = `
-        <div class="flex items-center gap-2 font-bold mb-1">
-          <i data-lucide="check-circle" class="w-4 h-4 text-emerald-600"></i>
-          <span>Respuesta Exitosa de ${gw}Adapter</span>
-        </div>
-        <p>Monto Transaccionado: <strong>S/ ${amount.toFixed(2)}</strong></p>
-        <p class="font-mono text-[11px] text-emerald-700 mt-1">Transacción ID: TXN-${Math.floor(Math.random() * 900000 + 100000)} | Estado: APPROVED</p>
-      `;
+      if (gw === 'Yape') {
+        resBox.className = "mt-4 p-4 rounded-xl text-xs bg-purple-50 border-2 border-purple-200 text-purple-950 block animate-fade-in shadow-sm";
+        resBox.innerHTML = `
+          <div class="flex items-center justify-between mb-2 pb-2 border-b border-purple-200">
+            <div class="flex items-center gap-2 font-bold text-sm text-purple-900">
+              <i data-lucide="check-circle-2" class="w-5 h-5 text-purple-600"></i>
+              <span>Cobro Procesado Exitosamente con Yape</span>
+            </div>
+            <span class="text-[10px] bg-purple-600 text-white font-bold px-2 py-0.5 rounded-full font-mono">BCP APROBADO</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+            <div><span class="text-slate-500 block">Monto Cobrado:</span><strong class="text-purple-900 text-sm">S/ ${amount.toFixed(2)}</strong></div>
+            <div><span class="text-slate-500 block">Confirmación Móvil:</span><strong class="text-slate-800">OTP al 987-654-321</strong></div>
+            <div><span class="text-slate-500 block">ID Transacción:</span><strong class="font-mono text-purple-700">YAP-${Math.floor(Math.random() * 900000 + 100000)}</strong></div>
+          </div>
+          <p class="text-[11px] text-purple-700 mt-2 font-medium">✓ Los fondos han sido acreditados de forma inmediata a la cuenta institucional de TechSolutions S.A.</p>
+        `;
+      } else if (gw === 'Plin') {
+        resBox.className = "mt-4 p-4 rounded-xl text-xs bg-sky-50 border-2 border-sky-200 text-sky-950 block animate-fade-in shadow-sm";
+        resBox.innerHTML = `
+          <div class="flex items-center justify-between mb-2 pb-2 border-b border-sky-200">
+            <div class="flex items-center gap-2 font-bold text-sm text-sky-900">
+              <i data-lucide="check-circle-2" class="w-5 h-5 text-sky-600"></i>
+              <span>Cobro Procesado Exitosamente con Plin</span>
+            </div>
+            <span class="text-[10px] bg-sky-600 text-white font-bold px-2 py-0.5 rounded-full font-mono">INTERBANCARIO OK</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+            <div><span class="text-slate-500 block">Monto Cobrado:</span><strong class="text-sky-900 text-sm">S/ ${amount.toFixed(2)}</strong></div>
+            <div><span class="text-slate-500 block">Red Interbancaria:</span><strong class="text-slate-800">BBVA / Scotiabank / Interbank</strong></div>
+            <div><span class="text-slate-500 block">ID Transacción:</span><strong class="font-mono text-sky-700">PLN-${Math.floor(Math.random() * 900000 + 100000)}</strong></div>
+          </div>
+          <p class="text-[11px] text-sky-700 mt-2 font-medium">✓ Transferencia móvil interbancaria liquidada en tiempo real sin recargos comerciales.</p>
+        `;
+      } else if (gw === 'PayPal') {
+        const usdAmount = (amount / 3.75).toFixed(2);
+        resBox.className = "mt-4 p-4 rounded-xl text-xs bg-blue-50 border-2 border-blue-200 text-blue-950 block animate-fade-in shadow-sm";
+        resBox.innerHTML = `
+          <div class="flex items-center justify-between mb-2 pb-2 border-b border-blue-200">
+            <div class="flex items-center gap-2 font-bold text-sm text-blue-900">
+              <i data-lucide="check-circle-2" class="w-5 h-5 text-blue-600"></i>
+              <span>Cobro Procesado Exitosamente con PayPal Express</span>
+            </div>
+            <span class="text-[10px] bg-blue-700 text-white font-bold px-2 py-0.5 rounded-full font-mono">SETTLED REST</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-xs">
+            <div><span class="text-slate-500 block">Monto en Soles:</span><strong class="text-blue-900 text-sm">S/ ${amount.toFixed(2)}</strong></div>
+            <div><span class="text-slate-500 block">Conversión Dólares:</span><strong class="text-slate-800">$ ${usdAmount} USD (T.C. 3.75)</strong></div>
+            <div><span class="text-slate-500 block">Token de Autorización:</span><strong class="font-mono text-blue-700">PAY-${Math.floor(Math.random() * 900000 + 100000)}</strong></div>
+          </div>
+          <p class="text-[11px] text-blue-700 mt-2 font-medium">✓ Transacción internacional aprobada mediante tarjeta y token seguro REST API.</p>
+        `;
+      }
+
       lucide.createIcons();
     }
 
