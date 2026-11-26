@@ -1,0 +1,19 @@
+# Dependencies & Build Artefacts
+node_modules/
+target/
+*.class
+.gradle/
+build/
+bin/
+
+# IDE & OS
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Logs & Temp
+*.log
+scratch/
+tmp/
